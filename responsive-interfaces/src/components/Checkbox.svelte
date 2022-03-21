@@ -25,7 +25,14 @@
   };
 </script>
 
-<div>
+<div class="checkbox-wrapper">
   <input bind:this={elt} type="checkbox" id="check" on:change={onChange} />
   <label for="check">Show the image</label>
 </div>
+
+<style>
+  input,
+  label {
+    cursor: pointer;
+  }
+</style>
