@@ -2,18 +2,31 @@
   import Slider from "./components/Slider/Slider.svelte";
   import Results from "./components/Slider/Results.svelte";
   import Checkbox from "./components/Checkbox.svelte";
+  import Button from "./components/Button.svelte";
+  import Interaction from "./components/Interaction.svelte";
+  let lagDuration = 100;
 
-  let lagDuration = 0;
+  let showResults = false;
+  let showButton = false;
 </script>
 
 <div class="section">
-  <Results point={lagDuration} />
-  <Slider on:change={(e) => (lagDuration = e.detail)} max={800} />
-  <Checkbox {lagDuration} />
-
-  <div>
-    Lagging for {lagDuration}ms
-  </div>
+  <Interaction mutation={lagDuration}>
+    <Checkbox {lagDuration} />
+  </Interaction>
+  {#if showResults}
+    <Results point={lagDuration} />
+  {:else}
+    <Slider
+      on:change={(e) => (lagDuration = e.detail)}
+      on:interact={() => (showButton = true)}
+      max={800}
+      value={lagDuration}
+    />
+    {#if showButton}
+      <Button on:click={() => (showResults = true)}>Set point</Button>
+    {/if}
+  {/if}
 </div>
 
 <style>

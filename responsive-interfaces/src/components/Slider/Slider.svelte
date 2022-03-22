@@ -10,10 +10,22 @@
   const onChange = (e) => {
     dispatch("change", e.target.value);
   };
+
+  const onInput = () => {
+    dispatch("interact");
+  };
 </script>
 
 <div class="slider-wrapper">
-  <input class="slider" type="range" {min} {max} {value} on:change={onChange} />
+  <input
+    class="slider"
+    type="range"
+    {min}
+    {max}
+    {value}
+    on:change={onChange}
+    on:input|once={onInput}
+  />
   <div class="slider-legend">
     <div>&larr; less lag</div>
     <div>more lag &rarr;</div>
@@ -37,28 +49,36 @@
     width: 25px;
     height: 25px;
     border-radius: 0;
-    background: #04aa6d;
+    background: #30597a;
     cursor: grab;
     border: none;
     border-radius: 2px;
+    box-shadow: 0px 0px 0px 0px transparent;
+    transition: transform 0.2s, box-shadow 0.2s;
   }
 
   .slider::-moz-range-thumb {
     width: 10px;
     height: 50px;
     border-radius: 0;
-    background: #04aa6d;
+    background: #30597a;
     cursor: grab;
     border: none;
     border-radius: 2px;
+    box-shadow: 0px 0px 0px 0px transparent;
+    transition: transform 0.2s, box-shadow 0.2s;
   }
 
   .slider:active::-moz-range-thumb {
     cursor: grabbing;
+    transform: scale(1.1);
+    box-shadow: 0px 0px 4px 1px #575d623d;
   }
 
   .slider:active::-webkit-slider-thumb {
     cursor: grabbing;
+    transform: scale(1.1);
+    box-shadow: 0px 0px 4px 1px #575d623d;
   }
 
   .slider-legend {

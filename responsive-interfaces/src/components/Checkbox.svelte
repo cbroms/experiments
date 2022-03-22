@@ -16,11 +16,20 @@
       // begin the lagging
       e.target.checked = false;
       lagging = true;
-
       setTimeout(() => {
         e.target.checked = true;
         lagging = false;
       }, lagDuration);
+    } else if (!e.target.checked && !lagging) {
+      e.target.checked = true;
+      lagging = true;
+      setTimeout(() => {
+        e.target.checked = false;
+        lagging = false;
+      }, lagDuration);
+    } else {
+      // we're lagging, prevent the checkbox from changing
+      e.target.checked = !e.target.checked;
     }
   };
 </script>
