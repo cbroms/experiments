@@ -1,10 +1,11 @@
 <script>
-  export let mutation;
+  export let lag = null;
+  export let name = "Interaction";
 
   let changed = false;
 
   $: {
-    if (mutation) {
+    if (lag !== null) {
       changed = true;
       setTimeout(() => {
         changed = false;
@@ -13,19 +14,27 @@
   }
 </script>
 
-<div class="interaction" class:changed>
+<fieldset class="interaction" class:changed>
+  <legend>{name} &mdash; {lag}ms</legend>
   <slot />
-</div>
+</fieldset>
 
 <style>
+  legend {
+    padding: 0.5rem;
+    border: 1px solid;
+    border-radius: var(--border-radius);
+    background-color: var(--background);
+  }
   .interaction {
     width: 100%;
     display: flex;
     justify-content: center;
     padding: 4rem 2rem;
-    background-color: white;
+    background-color: var(--background);
     transition: background-color 0.2s;
-    border-radius: 8px;
+    border-radius: var(--border-radius);
+    border: 1px solid;
   }
 
   .interaction.changed {

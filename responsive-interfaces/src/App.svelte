@@ -11,7 +11,7 @@
 </script>
 
 <div class="section">
-  <Interaction mutation={lagDuration}>
+  <Interaction lag={lagDuration} name="Interaction 1">
     <Checkbox {lagDuration} />
   </Interaction>
   {#if showResults}
@@ -23,8 +23,9 @@
       max={800}
       value={lagDuration}
     />
+
     {#if showButton}
-      <Button on:click={() => (showResults = true)}>Set point</Button>
+      <Button on:click={() => (showResults = true)} primary>Set point</Button>
     {/if}
   {/if}
 </div>

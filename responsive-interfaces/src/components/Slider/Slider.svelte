@@ -1,18 +1,30 @@
 <script>
+  import Button from "../Button.svelte";
+  import { createEventDispatcher } from "svelte";
+
   export let min = 0;
   export let max = 1000;
   export let value = 0;
 
-  import { createEventDispatcher } from "svelte";
+  let interacted = false;
 
   const dispatch = createEventDispatcher();
 
-  const onChange = (e) => {
-    dispatch("change", e.target.value);
+  const onInput = (e) => {
+    if (e) onChange(e);
+    if (!interacted) {
+      dispatch("interact");
+      interacted = true;
+    }
   };
 
-  const onInput = () => {
-    dispatch("interact");
+  const onChange = (e, changeVal) => {
+    const change = parseInt(e?.target?.value || changeVal || value);
+    if (change > max) dispatch("change", max);
+    else if (change < min) dispatch("change", min);
+    else dispatch("change", change);
+
+    onInput();
   };
 </script>
 
@@ -24,11 +36,15 @@
     {max}
     {value}
     on:change={onChange}
-    on:input|once={onInput}
+    on:input={onInput}
   />
   <div class="slider-legend">
-    <div>&larr; less lag</div>
-    <div>more lag &rarr;</div>
+    <Button on:click={() => onChange(null, parseInt(value) - 50)}
+      >- Less Lag</Button
+    >
+    <Button on:click={() => onChange(null, parseInt(value) + 50)}
+      >+ More Lag</Button
+    >
   </div>
 </div>
 
@@ -49,11 +65,11 @@
     width: 25px;
     height: 25px;
     border-radius: 0;
-    background: #30597a;
+    background-color: var(--primary);
     cursor: grab;
-    border: none;
-    border-radius: 2px;
-    box-shadow: 0px 0px 0px 0px transparent;
+    border: 1px solid;
+    border-radius: var(--border-radius-interact);
+    box-shadow: var(--shadow-interact);
     transition: transform 0.2s, box-shadow 0.2s;
   }
 
@@ -61,24 +77,24 @@
     width: 10px;
     height: 50px;
     border-radius: 0;
-    background: #30597a;
+    background-color: var(--primary);
     cursor: grab;
-    border: none;
-    border-radius: 2px;
-    box-shadow: 0px 0px 0px 0px transparent;
+    border: 1px solid;
+    border-radius: var(--border-radius-interact);
+    box-shadow: var(--shadow-interact);
     transition: transform 0.2s, box-shadow 0.2s;
   }
 
   .slider:active::-moz-range-thumb {
     cursor: grabbing;
     transform: scale(1.1);
-    box-shadow: 0px 0px 4px 1px #575d623d;
+    box-shadow: var(--shadow-interact-active);
   }
 
   .slider:active::-webkit-slider-thumb {
     cursor: grabbing;
     transform: scale(1.1);
-    box-shadow: 0px 0px 4px 1px #575d623d;
+    box-shadow: var(--shadow-interact-active);
   }
 
   .slider-legend {

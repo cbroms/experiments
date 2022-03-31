@@ -15,3 +15,18 @@ body {
 * {
   box-sizing: border-box;
 }
+
+:root {
+  --background: white;
+  --border-radius: 8px;
+  --border-radius-interact: 2px;
+  --shadow-interact: inset 0 1px 0px 0 rgba(255, 255, 255, 0.3),
+    0 2px 4px 0 rgba(0, 0, 0, 0.15);
+  --shadow-interact-active: inset 0 1px 0px 0 rgba(255, 255, 255, 0.3),
+    0 2px 6px 0 rgba(0, 0, 0, 0.4);
+
+  --primary: rgb(140, 180, 231);
+  --primary-hover: rgb(140, 180, 231);
+  --secondary: #fff;
+  --secondary-hover: rgb(140, 180, 231);
+}

@@ -56,10 +56,16 @@
 <div class="results-wrapper">
   <div class="results" bind:offsetWidth={eltWidth} />
   <ResultMarker right={rightPoint} x={adjustedPoint} {stretch}>
-    <div>Your point</div>
-  </ResultMarker>
+    <div>
+      <div>Your point</div>
+      <div>{point}ms</div>
+    </div></ResultMarker
+  >
   <ResultMarker right={rightAverage} x={adjustedAverage}>
-    <div>Average</div>
+    <div>
+      <div>Average</div>
+      <div>{average}ms</div>
+    </div>
   </ResultMarker>
 </div>
 
