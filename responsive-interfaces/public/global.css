@@ -17,6 +17,7 @@ body {
 }
 
 :root {
+  --section-width: 600px;
   --background: white;
   --border-radius: 8px;
   --border-radius-interact: 2px;

@@ -82,7 +82,7 @@
   .result-marker-wrapper {
     display: inline-block;
     position: absolute;
-    z-index: 2;
+    z-index: 1;
   }
 
   .result-marker {

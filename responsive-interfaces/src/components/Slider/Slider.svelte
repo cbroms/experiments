@@ -1,5 +1,4 @@
 <script>
-  import Button from "../Button.svelte";
   import { createEventDispatcher } from "svelte";
 
   export let min = 0;
@@ -29,22 +28,22 @@
 </script>
 
 <div class="slider-wrapper">
-  <input
-    class="slider"
-    type="range"
-    {min}
-    {max}
-    {value}
-    on:change={onChange}
-    on:input={onInput}
-  />
-  <div class="slider-legend">
-    <Button on:click={() => onChange(null, parseInt(value) - 50)}
-      >- Less Lag</Button
-    >
-    <Button on:click={() => onChange(null, parseInt(value) + 50)}
-      >+ More Lag</Button
-    >
+  <!-- <div class="slider-legend">
+    <span>&larr; Less lag</span>
+    <span>More lag &rarr;</span>
+  </div> -->
+  <div class="slider-internal">
+    <input
+      class="slider"
+      type="range"
+      {min}
+      {max}
+      {value}
+      on:change={onChange}
+      on:input={onInput}
+    />
+    <slot />
+    <div class="slider-background" />
   </div>
 </div>
 
@@ -53,10 +52,21 @@
     -webkit-appearance: none;
     width: 100%;
     height: 30px;
-    border-radius: 5px;
-    background: #d3d3d3;
+    background: transparent;
     outline: none;
     margin: 10px 0;
+    position: absolute;
+    z-index: 3;
+  }
+
+  .slider-background {
+    width: 100%;
+    height: 30px;
+    border-radius: 5px;
+    background: #d3d3d3;
+    position: absolute;
+    margin: 10px 0;
+    z-index: 0;
   }
 
   .slider::-webkit-slider-thumb {
@@ -103,7 +113,13 @@
     justify-content: space-between;
   }
 
+  .slider-internal {
+    position: relative;
+    width: var(--section-width);
+    height: 110px;
+  }
+
   .slider-wrapper {
-    margin: 1rem 0;
+    margin: 1rem auto;
   }
 </style>
