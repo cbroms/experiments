@@ -17,6 +17,7 @@ body {
 }
 
 :root {
+  --color: #333;
   --section-width: 600px;
   --background: white;
   --border-radius: 8px;
@@ -30,4 +31,8 @@ body {
   --primary-hover: rgb(140, 180, 231);
   --secondary: #fff;
   --secondary-hover: rgb(140, 180, 231);
+
+  --interaction-background: rgb(151, 175, 211);
+  --interaction-background-alt: rgb(94, 132, 190);
+  --interaction-color: rgb(44, 44, 44);
 }

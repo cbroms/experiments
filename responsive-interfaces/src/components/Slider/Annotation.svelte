@@ -65,7 +65,7 @@
 <div class="results-wrapper">
   <Marker right={rightPoint} x={adjustedPoint} stretch={pointStretch}>
     <div>
-      <div>Lag</div>
+      <div>{showAverage ? "Your point" : "Lag"}</div>
       <div>{point}ms</div>
     </div></Marker
   >
@@ -82,6 +82,6 @@
 <style>
   .results-wrapper {
     position: relative;
-    margin: 1rem 0;
+    /* margin: 1rem 0; */
   }
 </style>

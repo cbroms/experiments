@@ -10,32 +10,35 @@
   const dispatch = createEventDispatcher();
 
   const onInput = (e) => {
-    if (e) onChange(e);
+    if (e) onChange(e, "dragged");
     if (!interacted) {
       dispatch("interact");
       interacted = true;
     }
   };
 
-  const onChange = (e, changeVal) => {
+  const onChange = (e, eventName) => {
+    const eventNameToEmit = eventName || "set";
     const change = parseInt(e?.target?.value || changeVal || value);
-    if (change > max) dispatch("change", max);
-    else if (change < min) dispatch("change", min);
-    else dispatch("change", change);
+    if (change > max) dispatch(eventNameToEmit, max);
+    else if (change < min) dispatch(eventNameToEmit, min);
+    else dispatch(eventNameToEmit, change);
 
     onInput();
   };
 </script>
 
 <div class="slider-wrapper">
-  <!-- <div class="slider-legend">
-    <span>&larr; Less lag</span>
-    <span>More lag &rarr;</span>
-  </div> -->
+  <div class="slider-legend">
+    <div>&larr; Less lag</div>
+    <div>More lag &rarr;</div>
+  </div>
+
   <div class="slider-internal">
     <input
       class="slider"
       type="range"
+      step="10"
       {min}
       {max}
       {value}
@@ -76,7 +79,8 @@
     height: 25px;
     border-radius: 0;
     background-color: var(--primary);
-    cursor: grab;
+    /* cursor: grab; */
+    cursor: ew-resize;
     border: 1px solid;
     border-radius: var(--border-radius-interact);
     box-shadow: var(--shadow-interact);
@@ -88,7 +92,8 @@
     height: 50px;
     border-radius: 0;
     background-color: var(--primary);
-    cursor: grab;
+    /* cursor: grab; */
+    cursor: ew-resize;
     border: 1px solid;
     border-radius: var(--border-radius-interact);
     box-shadow: var(--shadow-interact);
@@ -96,13 +101,13 @@
   }
 
   .slider:active::-moz-range-thumb {
-    cursor: grabbing;
+    /* cursor: grabbing; */
     transform: scale(1.1);
     box-shadow: var(--shadow-interact-active);
   }
 
   .slider:active::-webkit-slider-thumb {
-    cursor: grabbing;
+    /* cursor: grabbing; */
     transform: scale(1.1);
     box-shadow: var(--shadow-interact-active);
   }
@@ -115,7 +120,7 @@
 
   .slider-internal {
     position: relative;
-    width: var(--section-width);
+    width: 100%;
     height: 110px;
   }
 

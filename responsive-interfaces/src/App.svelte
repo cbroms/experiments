@@ -6,6 +6,7 @@
   import Interaction from "./components/Interaction.svelte";
 
   let lagDuration = 100;
+  let tempLagDuration = 100;
 
   let showResults = false;
   let showButton = false;
@@ -21,21 +22,20 @@
 </script>
 
 <div class="section">
-  <Interaction lag={lagDuration} name="Interaction 1">
+  <Interaction lag={tempLagDuration} drop={lagDuration} name="Interaction 1">
     <Checkbox {lagDuration} />
   </Interaction>
 
   <Slider
-    on:change={(e) => (lagDuration = e.detail)}
+    on:dragged={(e) => (tempLagDuration = e.detail)}
+    on:set={(e) => (lagDuration = e.detail)}
     on:interact={() => (showButton = true)}
     max={800}
     value={lagDuration}
   >
-    <Annotation
-      point={showResults ? yourPoint : lagDuration}
-      {average}
-      showAverage={showResults}
-    />
+    {#if showResults}
+      <Annotation point={yourPoint} {average} showAverage />
+    {/if}
   </Slider>
 
   {#if showButton && !showResults}
@@ -50,5 +50,6 @@
     max-width: var(--section-width);
     width: 100%;
     margin: 6rem auto;
+    padding: 10px;
   }
 </style>

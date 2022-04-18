@@ -1,15 +1,16 @@
 <script>
   export let lag = null;
+  export let drop = null;
   export let name = "Interaction";
 
   let changed = false;
 
   $: {
-    if (lag !== null) {
+    if (drop !== null) {
       changed = true;
       setTimeout(() => {
         changed = false;
-      }, 200);
+      }, 300);
     }
   }
 </script>
@@ -22,22 +23,25 @@
 <style>
   legend {
     padding: 0.5rem;
+    color: var(--color);
     border: 1px solid;
     border-radius: var(--border-radius);
     background-color: var(--background);
   }
+
   .interaction {
     width: 100%;
     display: flex;
     justify-content: center;
     padding: 4rem 2rem;
-    background-color: var(--background);
-    transition: background-color 0.2s;
+    color: var(--interaction-color);
+    background-color: var(--interaction-background);
+    transition: background-color 0.3s;
     border-radius: var(--border-radius);
-    border: 1px solid;
+    border: 1px solid var(--interaction-background-alt);
   }
 
   .interaction.changed {
-    background-color: #d3d3d380;
+    background-color: var(--interaction-background-alt);
   }
 </style>
