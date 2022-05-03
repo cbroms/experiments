@@ -1,10 +1,10 @@
-import App from './App.svelte';
+import ViewerExample from "./ViewerExample.svelte";
 
-const app = new App({
-	target: document.body,
-	props: {
-		name: 'world'
-	}
+const app = new ViewerExample({
+  target: document.body,
+  //   props: {
+  //     name: "world",
+  //   },
 });
 
 export default app;
