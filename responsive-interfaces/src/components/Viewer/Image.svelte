@@ -1,10 +1,22 @@
 <script>
   export let src;
   export let filters = [];
+  export let alt = "";
+  export let height = null;
+  export let width = null;
+
+  export let full = false;
 </script>
 
-<div class="image">
-  <img {src} alt="primary page" style="filter: {filters.join(' ')};" />
+<div class="image" class:full>
+  <img
+    class:full
+    {src}
+    {alt}
+    style="filter: {filters.join(' ')}; {height
+      ? `height: ${height};`
+      : ''} {width ? `width: ${width};` : ''}"
+  />
 </div>
 
 <style>
@@ -13,7 +25,11 @@
     flex: 1 0 auto;
     display: flex;
     justify-content: center;
-    padding: 10px 0;
+  }
+
+  .image.full {
+    flex: auto;
+    height: 100%;
   }
 
   img {
@@ -21,5 +37,10 @@
     height: auto;
     width: 90%;
     max-width: 550px;
+  }
+
+  img.full {
+    width: 100%;
+    max-width: 100%;
   }
 </style>

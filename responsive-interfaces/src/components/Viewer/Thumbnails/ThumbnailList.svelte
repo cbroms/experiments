@@ -5,6 +5,7 @@
 
   export let images;
   export let selectedIndex;
+  export let filters;
 
   const dispatch = createEventDispatcher();
 </script>
@@ -15,6 +16,7 @@
       src={image}
       selected={selectedIndex === index}
       {index}
+      {filters}
       on:click={() => dispatch("thumbnailclick", { index })}
     />
   {/each}

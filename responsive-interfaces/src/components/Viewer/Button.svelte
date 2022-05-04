@@ -1,7 +1,9 @@
-<button on:click>View High Resolution Preview</button>
+<button on:click><slot /></button>
 
 <style>
   button {
+    cursor: pointer;
+
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -11,9 +13,6 @@
     outline: none;
     border: none;
     color: var(--90pct-grey);
-    cursor: pointer;
-    font-size: var(--text-sm);
-
     transition: background 0.2s;
   }
 

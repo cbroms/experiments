@@ -1,11 +1,14 @@
 <script>
+  import Image from "../Image.svelte";
+
   export let src;
   export let index;
   export let selected = false;
+  export let filters;
 </script>
 
 <div class="thumbnail" class:selected on:click>
-  <img {src} alt="page {index + 1}" />
+  <Image {src} {filters} alt="page {index + 1}" height="85px" width="100px" />
 </div>
 
 <style>
@@ -21,10 +24,10 @@
   .selected {
     border: 2px solid var(--ui-accent);
   }
-
+  /* 
   img {
     object-fit: cover;
     height: 85px;
     width: 100px;
-  }
+  } */
 </style>

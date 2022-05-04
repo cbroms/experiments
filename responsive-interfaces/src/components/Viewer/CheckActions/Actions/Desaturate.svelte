@@ -1,5 +1,7 @@
 <script>
   import FilterCheckbox from "../FilterCheckbox.svelte";
+
+  export let checked = false;
 </script>
 
 <FilterCheckbox
@@ -8,4 +10,5 @@
   filter="grayscale(100%)"
   on:addfilter
   on:removefilter
+  {checked}
 />

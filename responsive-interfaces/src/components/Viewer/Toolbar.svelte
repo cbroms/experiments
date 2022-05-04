@@ -1,22 +1,24 @@
 <script>
   import File from "./Icons/File.svelte";
 
-  export let filename;
+  export let filename = null;
 </script>
 
 <div class="toolbar">
   <div class="toolbar-left">
-    <div class="toolbar-title">
-      <div class="toolbar-icon">
-        <File />
+    {#if filename}
+      <div class="toolbar-title">
+        <div class="toolbar-icon">
+          <File />
+        </div>
+        <div>{filename}</div>
       </div>
-      <div>{filename}</div>
-    </div>
-    <slot name="left-action" />
+    {/if}
+    <slot name="left" />
   </div>
 
   <div class="toolbar-right">
-    <slot name="right-action" />
+    <slot name="right" />
   </div>
 </div>
 

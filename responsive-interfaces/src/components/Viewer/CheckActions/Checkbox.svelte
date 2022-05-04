@@ -4,19 +4,20 @@
   export let lagDuration = 0;
   export let label;
   export let id;
+  export let checked;
 
   let lagging = false;
   let elt = null;
 
   const dispatch = createEventDispatcher();
 
-  $: {
-    if (lagDuration !== undefined && elt) {
-      // reset when the duration changes
-      elt.checked = false;
-      dispatch("unchecked");
-    }
-  }
+  // $: {
+  //   if (lagDuration !== undefined && elt) {
+  //     // reset when the duration changes
+  //     elt.checked = false;
+  //     dispatch("unchecked");
+  //   }
+  // }
 
   const onChange = (e) => {
     if (e.target.checked && !lagging) {
@@ -44,7 +45,7 @@
 </script>
 
 <div class="checkbox-wrapper">
-  <input bind:this={elt} type="checkbox" {id} on:change={onChange} />
+  <input bind:this={elt} type="checkbox" {id} on:change={onChange} {checked} />
   <label for={id}>{label}</label>
 </div>
 

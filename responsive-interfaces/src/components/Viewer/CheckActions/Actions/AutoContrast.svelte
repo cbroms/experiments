@@ -1,5 +1,6 @@
 <script>
   import FilterCheckbox from "../FilterCheckbox.svelte";
+  export let checked = false;
 </script>
 
 <FilterCheckbox
@@ -8,4 +9,5 @@
   filter="contrast(1.75)"
   on:addfilter
   on:removefilter
+  {checked}
 />

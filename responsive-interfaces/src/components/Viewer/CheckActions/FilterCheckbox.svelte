@@ -6,6 +6,7 @@
   export let label;
   export let id;
   export let filter;
+  export let checked;
 
   const dispatch = createEventDispatcher();
 
@@ -18,4 +19,10 @@
   };
 </script>
 
-<Checkbox {label} {id} on:checked={onCheck} on:unchecked={onUncheck} />
+<Checkbox
+  {label}
+  {id}
+  on:checked={onCheck}
+  on:unchecked={onUncheck}
+  {checked}
+/>
