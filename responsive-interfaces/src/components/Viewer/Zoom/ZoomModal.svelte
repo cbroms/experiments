@@ -6,7 +6,6 @@
   import { createEventDispatcher } from "svelte";
 
   export let src;
-  export let filters;
 
   const dispatch = createEventDispatcher();
 
@@ -35,7 +34,7 @@
     </div>
   </Toolbar>
   <div class="modal-content">
-    <ImageComponent src={imageSrc} {filters} full alt="primary image" />
+    <ImageComponent src={imageSrc} full alt="primary image" />
   </div>
 </div>
 

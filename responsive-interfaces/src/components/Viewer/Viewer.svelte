@@ -12,8 +12,8 @@
   let previewOpen = false;
 
   const images = ["./images/shrooms1.jpeg", "./images/shrooms2.jpeg"];
-  let filters = [];
-  let enabledFilters = [];
+  // let filters = [];
+
   let currentImageIndex = 0;
 
   const openPreview = () => {
@@ -27,58 +27,29 @@
   const changeSelected = (e) => {
     currentImageIndex = e.detail.index;
   };
-
-  const addFilter = (e, type) => {
-    filters = [...filters, e.detail.filter];
-    enabledFilters = [...enabledFilters, type];
-  };
-
-  const removeFilter = (e, type) => {
-    console.log(type);
-    filters = [...filters].filter((f) => {
-      return f !== e.detail.filter;
-    });
-
-    enabledFilters = [...enabledFilters].filter((f) => {
-      return f !== type;
-    });
-  };
 </script>
 
 <div class="viewer" style="height: {height}px;">
   {#if previewOpen}
-    <ZoomModal
-      on:close={closePreview}
-      src={images[currentImageIndex]}
-      {filters}
-    />
+    <ZoomModal on:close={closePreview} src={images[currentImageIndex]} />
   {:else}
     <Toolbar filename="shrooms.tiff">
       <div slot="left">
         <Button on:click={openPreview}>View High Resolution Preview</Button>
       </div>
       <div class="actions" slot="right">
-        <Desaturate
-          checked={enabledFilters.includes("des")}
-          on:addfilter={(e) => addFilter(e, "des")}
-          on:removefilter={(e) => removeFilter(e, "des")}
-        />
-        <AutoContrast
-          checked={enabledFilters.includes("con")}
-          on:addfilter={(e) => addFilter(e, "con")}
-          on:removefilter={(e) => removeFilter(e, "con")}
-        />
+        <Desaturate />
+        <AutoContrast />
       </div>
     </Toolbar>
 
     <div class="viewer-content">
       <ThumbnailList
         {images}
-        {filters}
         selectedIndex={currentImageIndex}
         on:thumbnailclick={changeSelected}
       />
-      <Image src={images[currentImageIndex]} {filters} alt="primary image" />
+      <Image src={images[currentImageIndex]} alt="primary image" />
     </div>
   {/if}
 </div>

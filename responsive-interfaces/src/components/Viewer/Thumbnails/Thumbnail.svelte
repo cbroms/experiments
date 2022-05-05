@@ -4,11 +4,10 @@
   export let src;
   export let index;
   export let selected = false;
-  export let filters;
 </script>
 
 <div class="thumbnail" class:selected on:click>
-  <Image {src} {filters} alt="page {index + 1}" height="85px" width="100px" />
+  <Image {src} alt="page {index + 1}" height="85px" width="100px" />
 </div>
 
 <style>

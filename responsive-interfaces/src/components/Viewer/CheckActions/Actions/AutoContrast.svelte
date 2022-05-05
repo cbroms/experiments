@@ -1,13 +1,15 @@
 <script>
+  import { getContext } from "svelte";
+
   import FilterCheckbox from "../FilterCheckbox.svelte";
-  export let checked = false;
+
+  const filters = getContext("filters");
 </script>
 
 <FilterCheckbox
   label="Auto Contrast"
   id="auto-contrast"
-  filter="contrast(1.75)"
-  on:addfilter
-  on:removefilter
-  {checked}
+  checked={$filters.contrast.active}
+  on:checked={() => filters.setFilter("contrast", true)}
+  on:unchecked={() => filters.setFilter("contrast", false)}
 />

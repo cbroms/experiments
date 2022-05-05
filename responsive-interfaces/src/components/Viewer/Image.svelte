@@ -1,11 +1,23 @@
 <script>
+  import { getContext } from "svelte";
+
   export let src;
-  export let filters = [];
   export let alt = "";
   export let height = null;
   export let width = null;
 
   export let full = false;
+
+  const filters = getContext("filters");
+
+  let filterString = "";
+
+  $: {
+    filterString = "";
+    for (let filter in $filters) {
+      if ($filters[filter].active) filterString += $filters[filter].css + " ";
+    }
+  }
 </script>
 
 <div class="image" class:full>
@@ -13,9 +25,9 @@
     class:full
     {src}
     {alt}
-    style="filter: {filters.join(' ')}; {height
-      ? `height: ${height};`
-      : ''} {width ? `width: ${width};` : ''}"
+    style="filter: {filterString}; {height ? `height: ${height};` : ''} {width
+      ? `width: ${width};`
+      : ''}"
   />
 </div>
 

@@ -1,28 +1,20 @@
 <script>
-  import { createEventDispatcher } from "svelte";
+  import { getContext } from "svelte";
 
   import Checkbox from "./Checkbox.svelte";
 
   export let label;
   export let id;
-  export let filter;
   export let checked;
 
-  const dispatch = createEventDispatcher();
-
-  const onCheck = () => {
-    dispatch("addfilter", { filter });
-  };
-
-  const onUncheck = () => {
-    dispatch("removefilter", { filter });
-  };
+  const actions = getContext("actions");
 </script>
 
 <Checkbox
   {label}
   {id}
-  on:checked={onCheck}
-  on:unchecked={onUncheck}
+  on:checked
+  on:unchecked
   {checked}
+  lagDuration={$actions.filter.lagDuration}
 />

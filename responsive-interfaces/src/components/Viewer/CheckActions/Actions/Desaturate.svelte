@@ -1,14 +1,15 @@
 <script>
+  import { getContext } from "svelte";
+
   import FilterCheckbox from "../FilterCheckbox.svelte";
 
-  export let checked = false;
+  const filters = getContext("filters");
 </script>
 
 <FilterCheckbox
   label="Desaturate"
   id="desaturate"
-  filter="grayscale(100%)"
-  on:addfilter
-  on:removefilter
-  {checked}
+  checked={$filters.desaturate.active}
+  on:checked={() => filters.setFilter("desaturate", true)}
+  on:unchecked={() => filters.setFilter("desaturate", false)}
 />
