@@ -2,19 +2,17 @@
   import Toolbar from "./Toolbar.svelte";
   import Image from "./Image.svelte";
   import ThumbnailList from "./Thumbnails/ThumbnailList.svelte";
-  import Button from "./Button.svelte";
+  import ZoomButton from "./Zoom/ZoomButton.svelte";
   import Desaturate from "./CheckActions/Actions/Desaturate.svelte";
   import AutoContrast from "./CheckActions/Actions/AutoContrast.svelte";
   import ZoomModal from "./Zoom/ZoomModal.svelte";
+  import { getContext } from "svelte";
 
   export let height = 600;
 
   let previewOpen = false;
 
-  const images = ["./images/shrooms1.jpeg", "./images/shrooms2.jpeg"];
-  // let filters = [];
-
-  let currentImageIndex = 0;
+  const images = getContext("images");
 
   const openPreview = () => {
     previewOpen = true;
@@ -23,33 +21,24 @@
   const closePreview = () => {
     previewOpen = false;
   };
-
-  const changeSelected = (e) => {
-    currentImageIndex = e.detail.index;
-  };
 </script>
 
 <div class="viewer" style="height: {height}px;">
   {#if previewOpen}
-    <ZoomModal on:close={closePreview} src={images[currentImageIndex]} />
+    <ZoomModal on:close={closePreview} />
   {:else}
     <Toolbar filename="shrooms.tiff">
       <div slot="left">
-        <Button on:click={openPreview}>View High Resolution Preview</Button>
+        <ZoomButton on:click={openPreview} />
       </div>
       <div class="actions" slot="right">
         <Desaturate />
         <AutoContrast />
       </div>
     </Toolbar>
-
     <div class="viewer-content">
-      <ThumbnailList
-        {images}
-        selectedIndex={currentImageIndex}
-        on:thumbnailclick={changeSelected}
-      />
-      <Image src={images[currentImageIndex]} alt="primary image" />
+      <ThumbnailList />
+      <Image src={$images.srcs[$images.active]} alt="primary image" />
     </div>
   {/if}
 </div>

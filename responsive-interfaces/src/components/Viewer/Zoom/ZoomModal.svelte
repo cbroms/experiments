@@ -3,25 +3,22 @@
   import Close from "../Icons/Close.svelte";
   import Button from "../Button.svelte";
   import ImageComponent from "../Image.svelte";
-  import { createEventDispatcher } from "svelte";
-
-  export let src;
+  import { createEventDispatcher, getContext } from "svelte";
 
   const dispatch = createEventDispatcher();
-
-  let imageSrc = null;
+  const images = getContext("images");
 
   const onClose = () => {
     dispatch("close");
   };
 
-  $: {
-    if (src) {
-      const img = new Image();
-      img.src = src;
-      imageSrc = img.src;
-    }
-  }
+  // $: {
+  //   if (src) {
+  //     const img = new Image();
+  //     img.src = src;
+  //     imageSrc = img.src;
+  //   }
+  // }
 </script>
 
 <div class="zoom-modal">
@@ -34,7 +31,11 @@
     </div>
   </Toolbar>
   <div class="modal-content">
-    <ImageComponent src={imageSrc} full alt="primary image" />
+    <ImageComponent
+      src={$images.srcs[$images.active]}
+      full
+      alt="primary image"
+    />
   </div>
 </div>
 

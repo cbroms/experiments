@@ -1,21 +1,18 @@
 <script>
   import Thumbnail from "./Thumbnail.svelte";
 
-  import { createEventDispatcher } from "svelte";
+  import { getContext } from "svelte";
 
-  export let images;
-  export let selectedIndex;
-
-  const dispatch = createEventDispatcher();
+  const images = getContext("images");
 </script>
 
 <div class="thumbnail-list">
-  {#each images as image, index}
+  {#each $images.srcs as image, index}
     <Thumbnail
       src={image}
-      selected={selectedIndex === index}
+      selected={$images.active === index}
       {index}
-      on:click={() => dispatch("thumbnailclick", { index })}
+      on:click={() => images.setActive(index)}
     />
   {/each}
 </div>
