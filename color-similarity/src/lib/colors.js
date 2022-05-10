@@ -1,6 +1,7 @@
 import {
 	formatHex,
 	wcagContrast,
+	displayable,
 	random,
 	clampChroma,
 	converter,
@@ -15,8 +16,8 @@ const _lch65 = converter('lch65');
 const _cvd = filterDeficiencyProt(1);
 const _distance = differenceEuclidean('lch65');
 
-const _random = (lRange = [0, 100]) => {
-	const color = random('lch65', { l: lRange });
+const _random = (chroma = 50, lRange = [0, 100]) => {
+	const color = random('lch65', { c: chroma, l: lRange });
 	return color;
 };
 
@@ -32,8 +33,8 @@ const _toHex = (lch) => {
 	return formatHex(clamped);
 };
 
-const generateRandom = (lRange = [40, 90]) => {
-	return _toHex(_random(lRange));
+const generateRandom = (chroma = 50, lRange = [40, 90]) => {
+	return _random(chroma, lRange);
 };
 
 const getOpposite = (hex = '#fff') => {
@@ -48,8 +49,10 @@ const generatePalette = (startHex = '#fff', numColors = 10, lRange = [0, 100]) =
 	let currentColor = _lch65(startHex);
 
 	// remap current color's l* value to fit into provided range
-	if (currentColor.l < lRange[0]) currentColor.l = lRange[0];
-	else if (currentColor.l > lRange[1]) currentColor.l = lRange[1];
+	const distFromMin = lRange[0] - currentColor.l;
+	const distFromMax = lRange[1] - currentColor.l;
+	if (distFromMin < distFromMax) currentColor.l = lRange[0];
+	else currentColor.l = lRange[1];
 
 	let palette = [currentColor];
 
@@ -66,6 +69,17 @@ const generatePalette = (startHex = '#fff', numColors = 10, lRange = [0, 100]) =
 			const testSummedDistance = palette.reduce((prev, existingColor) => {
 				return prev + _distance(existingColor, testColor);
 			}, 0);
+
+			// const testDistances = palette.map((c) => _distance(c, testColor));
+			// const avgDistance = testDistances.reduce((a, d) => a + d, 0) / palette.length;
+			// const sumOfSquaresDist = testDistances.reduce((a, d) => {
+			// 	return a + Math.pow(d - avgDistance, 2);
+			// }, 0);
+
+			// if (sumOfSquaresDist > greatestDistance) {
+			// 	greatestDistance = avgDistance;
+			// 	bestColor = { ...testColor };
+			// }
 			// const testDistance = _distance(currentColor, testColor);
 			if (testSummedDistance > greatestDistance) {
 				greatestDistance = testSummedDistance;
@@ -76,11 +90,18 @@ const generatePalette = (startHex = '#fff', numColors = 10, lRange = [0, 100]) =
 		currentColor = { ...bestColor };
 	}
 
-	return (
-		palette
-			// .sort((a, b) => _distance(a, b))
-			.map((c) => _toHex(c))
-	);
+	let distance = 0;
+
+	for (let i = 1; i < palette.length; i++) {
+		distance += _distance(palette[i - 1], palette[i]);
+	}
+
+	return {
+		colors: palette.map((c) => {
+			return { hex: _toHex(c), lch: c };
+		}),
+		distance
+	};
 };
 
 const getPaletteDistances = (palette = []) => {
@@ -133,7 +154,9 @@ const adjustPaletteForCvd = (palette = [], lRange = [0, 100]) => {
 		adjustedPalette.push(bestColor);
 	}
 
-	return adjustedPalette.map((c) => _toHex(c));
+	return adjustedPalette.map((c) => {
+		return { hex: _toHex(c), lch: c };
+	});
 };
 
 const paletteToCvdPalette = (palette) => {
@@ -158,7 +181,7 @@ const paletteToCvdPalette = (palette) => {
 
 // 	for (const a of colors) {
 // 		for (const b of colors) {
-// 			const dist = distFunc(a, b);
+// 			const dist = distFunc(a10 b);
 // 			if (dist > greatestDist) {
 // 				greatestDist = dist;
 // 				color1 = a;
@@ -172,11 +195,54 @@ const paletteToCvdPalette = (palette) => {
 // 	return [formatHex(color1), formatHex(color2)];
 // };
 
+const make2DCIELCHMap = (chroma = 50) => {
+	console.log('chroma', chroma);
+	const colors = [];
+	for (let h = 0; h < 360; h++) {
+		let column = [];
+		for (let l = 0; l < 100; l++) {
+			const color = {
+				mode: 'lch65',
+				h,
+				c: chroma,
+				l
+			};
+			// if (displayable(color)) column.push({ hex: _toHex(color), lch: color });
+			// else column.push(null);
+			column.push({ hex: _toHex(color), lch: color });
+		}
+		colors.push(column);
+	}
+
+	return colors;
+};
+
+const hexToLCH = (hexColor = '#fff') => {
+	return _lch65(hexColor);
+};
+
+const LCHToHex = (lchColor = {}) => {
+	return _toHex(lchColor);
+};
+
+const modifyColor = (lchColor = {}, modification = {}) => {
+	return _lch65({ ...lchColor, ...modification });
+};
+
+const getDistance = (color1, color2) => {
+	return _distance(color1, color2);
+};
+
 export {
 	generateRandom,
 	getOpposite,
+	getDistance,
 	generatePalette,
 	paletteToCvdPalette,
 	getPaletteDistances,
-	adjustPaletteForCvd
+	adjustPaletteForCvd,
+	make2DCIELCHMap,
+	hexToLCH,
+	LCHToHex,
+	modifyColor
 };
