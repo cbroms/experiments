@@ -11,12 +11,12 @@
 		generateRandom,
 		generatePalette,
 		paletteToCvdPalette,
-		getPaletteDistances,
-		adjustPaletteForCvd,
-		modifyColor
+		modifyColor,
+		generatePaletteIcosahedron
 	} from '$lib/colors.js';
 
 	import ColorMap from '$lib/components/ColorMap.svelte';
+	import DistanceMetrics from '$lib/components/DistanceMetrics.svelte';
 	import Swatch from '$lib/components/Swatch.svelte';
 	import { onMount } from 'svelte';
 
@@ -29,11 +29,15 @@
 	let hue;
 
 	let mapColors;
+	let mapColorsCvd;
 
 	let distance = 0;
+	let distanceCvd = 0;
 
 	let lightnessMax;
 	let lightnessMin;
+
+	let adjustForCvd = false;
 
 	onMount(() => {
 		lightnessMax = 85;
@@ -41,7 +45,8 @@
 		chroma = 120;
 
 		inputColor = generateRandom(chroma, [lightnessMin, lightnessMax]);
-		mapColors = make2DCIELCHMap(chroma);
+		mapColors = make2DCIELCHMap(chroma, false);
+		mapColorsCvd = make2DCIELCHMap(chroma, true);
 
 		updateValuesFromColor();
 	});
@@ -50,31 +55,34 @@
 		const newChoma = Math.round(inputColor.c);
 		if (newChoma !== chroma) {
 			mapColors = make2DCIELCHMap(newChoma);
+			mapColorsCvd = make2DCIELCHMap(newChoma, true);
 		}
 		chroma = newChoma;
 		lightness = Math.round(inputColor.l);
 		hue = Math.round(inputColor.h);
 
-		const newPalette = generatePalette(inputColor, 20, [lightnessMin, lightnessMax]);
-		colors = newPalette.colors;
-		distance = newPalette.distance;
+		updateColorPalette();
 	};
 
-	// const onCvdCheck = (e) => {
-	// 	if (e.target.checked) {
-	// 		console.log('pre reg: ', getPaletteDistances(colors));
-	// 		console.log('pre cvd: ', getPaletteDistances(colorsCvd));
+	const updateColorPalette = () => {
+		const newPalette = generatePalette(inputColor, 10, [lightnessMin, lightnessMax], adjustForCvd);
+		const newPaletteCvd = paletteToCvdPalette(newPalette);
+		// const newPalette = generatePaletteIcosahedron(chroma);
+		colors = newPalette.colors;
+		colorsCvd = newPaletteCvd.colors;
+		distance = newPalette.distance;
+		distanceCvd = newPaletteCvd.distance;
+	};
 
-	// 		colors = adjustPaletteForCvd(colors, [50, 90]);
-	// 		colorsCvd = paletteToCvdPalette(colors);
-
-	// 		console.log('post reg: ', getPaletteDistances(colors));
-	// 		console.log('post cvd: ', getPaletteDistances(colorsCvd));
-	// 	} else {
-	// 		colors = generatePalette(inputColor, 10, [50, 90]);
-	// 		colorsCvd = paletteToCvdPalette(colors);
-	// 	}
-	// };
+	const onCvdCheck = (e) => {
+		if (e.target.checked) {
+			adjustForCvd = true;
+			updateColorPalette();
+		} else {
+			adjustForCvd = false;
+			updateColorPalette();
+		}
+	};
 
 	const onChromaInput = (e) => {
 		inputColor = modifyColor(inputColor, { c: parseInt(e.target.value) });
@@ -141,7 +149,7 @@
 	</div>
 	<div />
 
-	<!-- <input type="checkbox" on:change={onCvdCheck} /> -->
+	<input type="checkbox" on:change={onCvdCheck} />
 	<!-- <button on:click={randomColor}>Generate Random</button> -->
 
 	<div>
@@ -149,17 +157,24 @@
 			<Swatch hex={col.hex} />
 		{/each}
 	</div>
-	<hr />
 	<div>
-		{#each colorsCvd as hex}
-			<Swatch {hex} />
-		{/each}
-	</div>
-	<div>
-		Distance: {distance}
+		<DistanceMetrics {distance} />
 	</div>
 	<div>
 		<ColorMap colors={mapColors} palette={colors} {lightnessMax} {lightnessMin} />
+	</div>
+
+	<hr />
+	<div>
+		{#each colorsCvd as col}
+			<Swatch hex={col.hex} />
+		{/each}
+	</div>
+	<div>
+		<DistanceMetrics distance={distanceCvd} />
+	</div>
+	<div>
+		<ColorMap colors={mapColorsCvd} palette={colors} {lightnessMax} {lightnessMin} />
 	</div>
 </section>
 

@@ -25,31 +25,27 @@
 			for (let h = 0; h < 360; h++) {
 				for (let l = 0; l < 100; l++) {
 					if (colors[h][l] !== null) {
-						ctx.strokeStyle = colors[h][l].hex;
-						ctx.strokeWidth = '1px';
-						ctx.beginPath();
-						ctx.moveTo(h, l);
-						ctx.lineTo(h, l + 1);
-						ctx.stroke();
+						ctx.fillStyle = colors[h][l].hex;
+						ctx.fillRect(h, l, 1, 1);
 					}
 				}
 			}
 
-			if (lightnessMax) {
-				ctx.strokeStyle = '#fff';
-				ctx.beginPath();
-				ctx.moveTo(0, lightnessMax);
-				ctx.lineTo(360, lightnessMax);
-				ctx.stroke();
-			}
+			// if (lightnessMax) {
+			// 	ctx.strokeStyle = '#fff';
+			// 	ctx.beginPath();
+			// 	ctx.moveTo(0, lightnessMax);
+			// 	ctx.lineTo(360, lightnessMax);
+			// 	ctx.stroke();
+			// }
 
-			if (lightnessMin) {
-				ctx.strokeStyle = '#fff';
-				ctx.beginPath();
-				ctx.moveTo(0, lightnessMin);
-				ctx.lineTo(360, lightnessMin);
-				ctx.stroke();
-			}
+			// if (lightnessMin) {
+			// 	ctx.strokeStyle = '#fff';
+			// 	ctx.beginPath();
+			// 	ctx.moveTo(0, lightnessMin);
+			// 	ctx.lineTo(360, lightnessMin);
+			// 	ctx.stroke();
+			// }
 
 			for (const color of palette) {
 				const h = Math.round(color.lch.h);
