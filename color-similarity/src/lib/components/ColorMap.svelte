@@ -31,25 +31,25 @@
 				}
 			}
 
-			// if (lightnessMax) {
-			// 	ctx.strokeStyle = '#fff';
-			// 	ctx.beginPath();
-			// 	ctx.moveTo(0, lightnessMax);
-			// 	ctx.lineTo(360, lightnessMax);
-			// 	ctx.stroke();
-			// }
+			if (lightnessMax) {
+				ctx.strokeStyle = '#fff';
+				ctx.beginPath();
+				ctx.moveTo(0, lightnessMax * 100);
+				ctx.lineTo(360, lightnessMax * 100);
+				ctx.stroke();
+			}
 
-			// if (lightnessMin) {
-			// 	ctx.strokeStyle = '#fff';
-			// 	ctx.beginPath();
-			// 	ctx.moveTo(0, lightnessMin);
-			// 	ctx.lineTo(360, lightnessMin);
-			// 	ctx.stroke();
-			// }
+			if (lightnessMin) {
+				ctx.strokeStyle = '#fff';
+				ctx.beginPath();
+				ctx.moveTo(0, lightnessMin * 100);
+				ctx.lineTo(360, lightnessMin * 100);
+				ctx.stroke();
+			}
 
 			for (const color of palette) {
 				const h = Math.round(color.lch.h);
-				const l = Math.round(color.lch.l);
+				const l = Math.round(color.lch.l * 100);
 
 				ctx.fillStyle = color.hex;
 				ctx.strokeStyle = '#fff';

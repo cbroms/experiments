@@ -10,15 +10,15 @@ import {
 	differenceEuclidean
 } from 'culori';
 
-const L_STEP_SIZE = 1;
+const L_STEP_SIZE = 0.01;
 const H_STEP_SIZE = 1;
 
-const _lch = converter('lch');
+const _lch = converter('oklch');
 const _cvd = filterDeficiencyProt(1);
-const _distance = differenceEuclidean('lch');
+const _distance = differenceEuclidean('oklch');
 
-const _random = (chroma = 50, lRange = [0, 100]) => {
-	const color = random('lch', { c: chroma, l: lRange });
+const _random = (chroma = 0, lRange = [0, 100]) => {
+	const color = random('oklch', { c: chroma, l: lRange });
 	return color;
 };
 
@@ -34,7 +34,7 @@ const _toHex = (lch) => {
 	return formatHex(clamped);
 };
 
-const generateRandom = (chroma = 50, lRange = [40, 90]) => {
+const generateRandom = (chroma = 0, lRange = [40, 90]) => {
 	return _random(chroma, lRange);
 };
 
@@ -53,6 +53,7 @@ const _getPaletteDistance = (palette = []) => {
 	return distanceSum;
 };
 
+// get the min/max distance between each combination of colors in a palette
 const _getPaletteMinMax = (palette = []) => {
 	let min = 2000;
 	let max = 0;
@@ -70,6 +71,7 @@ const _getPaletteMinMax = (palette = []) => {
 	return { min, max };
 };
 
+// get the min/max distance between a color and all colors in a palette
 const _getPaletteColorMinMax = (palette = [], compareColor) => {
 	let min = 2000;
 	let max = 0;
@@ -96,7 +98,7 @@ const generatePalette = (
 	cvdAdjust = false
 ) => {
 	const rotation = 360 / numColors;
-	const halfRotation = rotation / 2;
+	const halfRotation = rotation / 4;
 
 	let currentColor = _lch(startHex);
 
@@ -113,15 +115,13 @@ const generatePalette = (
 	for (let i = 0; i < numColors - 1; i++) {
 		const nextColor = { ...currentColor, h: _rotateHueByDegrees(currentColor.h, rotation) };
 
-		// let greatestDistance = 0;
-		// let bestColor = { ...nextColor };
 		let distances = [];
 		let distancesCvd = [];
 		let colors = [];
 
-		// find the l* value for this color that results in the largest minimum distance from
+		// find the L value for this color that results in the largest minimum distance from
 		// the other colors in the palette
-		for (let thisL = lRange[0]; thisL < lRange[1]; thisL += L_STEP_SIZE) {
+		for (let thisL = lRange[0]; thisL <= lRange[1]; thisL += L_STEP_SIZE) {
 			if (cvdAdjust) {
 				// loop through the hues around the test hue
 				for (
@@ -129,20 +129,23 @@ const generatePalette = (
 					thisH < nextColor.h + halfRotation;
 					thisH += H_STEP_SIZE
 				) {
+					// try this L/H value combination; get the minimum distance between it and other
+					// colors in the palette
 					const testColorLch = { ...nextColor, l: thisL, h: thisH };
 					const testColor = { hex: _toHex(testColorLch), lch: testColorLch };
 					const testMin = _getPaletteColorMinMax(palette, testColor).min;
 					distances.push(testMin);
 
+					// do the same for the cvd version of the color and palette
 					const testColorLchCvd = _cvd(testColorLch);
 					const testColorCvd = { hex: _toHex(testColorLchCvd), lch: testColorLchCvd };
-					// todo: use cvd palette
 					const testMinCvd = _getPaletteColorMinMax(paletteCvd, testColorCvd).min;
 					distancesCvd.push(testMinCvd);
 
 					colors.push({ ...testColor.lch });
 				}
 			} else {
+				// try this L value; get the minimum distance between it and other colors in the palette
 				const testColorLch = { ...nextColor, l: thisL };
 				const testColor = { hex: _toHex(testColorLch), lch: testColorLch };
 
@@ -150,31 +153,19 @@ const generatePalette = (
 				distances.push(min);
 				colors.push({ ...testColor.lch });
 			}
-
-			// const testSummedDistance = palette.reduce((prev, existingColor) => {
-			// 	return prev + _distance(existingColor.lch, testColor);
-			// }, 0);
-
-			// if (cvdAdjust) {
-			// 	const testSummedDistance
-			// } else {
-
-			// }
-
-			// if (testSummedDistance > greatestDistance) {
-			// 	greatestDistance = testSummedDistance;
-			// 	bestColor = { ...testColor };
-			// }
 		}
 
 		let largestDistIdx = 0;
 
 		if (cvdAdjust) {
+			// find the mean minimum distance for all sample colors we tried out
 			const distancesMean = distances.reduce((p, d) => p + d, 0) / distances.length;
 			const distancesCvdMean = distancesCvd.reduce((p, d) => p + d, 0) / distancesCvd.length;
 
 			let maxDistFromMean = 0;
 
+			// find the color with the largest min distance from the mean for both normal and cvd versions
+			// of the palette
 			for (let i = 0; i < distances.length; i++) {
 				const distFromMean = distances[i] - distancesMean;
 				const distFromMeanCvd = distancesCvd[i] - distancesCvdMean;
@@ -184,6 +175,7 @@ const generatePalette = (
 				}
 			}
 		} else {
+			// find the color with the largest min distance from other colors in the palette
 			for (let i = 0; i < distances.length; i++) {
 				if (distances[i] > distances[largestDistIdx]) largestDistIdx = i;
 			}
@@ -219,7 +211,7 @@ const generatePaletteIcosahedron = (c) => {
 			high = true;
 		}
 		const color = {
-			mode: 'lch',
+			mode: 'oklch',
 			c,
 			l,
 			h
@@ -228,44 +220,6 @@ const generatePaletteIcosahedron = (c) => {
 	}
 	return { colors, distance: _getPaletteDistanceMetrics(colors) };
 };
-
-// const adjustPaletteForCvd = (palette = [], lRange = [0, 100]) => {
-// 	const rotation = 360 / palette.length;
-// 	const rotationVar = rotation / 2;
-
-// 	palette = palette.map((c) => _lch(c));
-
-// 	let adjustedPalette = [];
-// 	// if we're testing cvd, go back over the palette and adjust the hues such that there's
-// 	// sufficient distance between each possible pair of colors
-// 	for (const color of palette) {
-// 		// step through the possible h* and l* changes and find the combination that
-// 		// has the greatest contrast with the other colors
-// 		let geatestDistance = 0;
-// 		let bestColor = { ...color };
-
-// 		for (let thisL = lRange[0]; thisL < lRange[1]; thisL += L_STEP_SIZE) {
-// 			for (let thisH = color.h - rotationVar; thisH < color.h + rotationVar; thisH += H_STEP_SIZE) {
-// 				const testColor = { ...color, h: thisH, l: thisL };
-// 				const testColorCvd = _cvd({ ...testColor });
-
-// 				const testSummedDistance = adjustedPalette.reduce((prev, existingColor) => {
-// 					return prev + _distance(_cvd(existingColor), testColorCvd);
-// 				}, 0);
-
-// 				if (testSummedDistance > geatestDistance) {
-// 					geatestDistance = testSummedDistance;
-// 					bestColor = { ...testColor };
-// 				}
-// 			}
-// 		}
-// 		adjustedPalette.push(bestColor);
-// 	}
-
-// 	return adjustedPalette.map((c) => {
-// 		return { hex: _toHex(c), lch: c };
-// 	});
-// };
 
 const paletteToCvdPalette = (palette = []) => {
 	const cvdColorsLch = palette.colors.map((c) => _cvd(c.lch));
@@ -279,33 +233,6 @@ const paletteToCvdPalette = (palette = []) => {
 	};
 };
 
-// const sortRandomColors = () => {
-// 	const colors = [];
-// 	for (let i = 0; i < 100; i++) {
-// 		colors.push(_random());
-// 	}
-
-// 	let greatestDist = 0;
-// 	let color1, color2;
-
-// 	const distFunc = differenceCie76();
-
-// 	for (const a of colors) {
-// 		for (const b of colors) {
-// 			const dist = distFunc(a10 b);
-// 			if (dist > greatestDist) {
-// 				greatestDist = dist;
-// 				color1 = a;
-// 				color2 = b;
-// 			}
-// 		}
-// 	}
-
-// 	console.log(greatestDist);
-
-// 	return [formatHex(color1), formatHex(color2)];
-// };
-
 const make2DCIELCHMap = (chroma = 50, cvd = false) => {
 	const colors = [];
 	for (let h = 0; h < 360; h++) {
@@ -313,6 +240,28 @@ const make2DCIELCHMap = (chroma = 50, cvd = false) => {
 		for (let l = 0; l < 100; l++) {
 			let color = {
 				mode: 'lch',
+				h,
+				c: chroma,
+				l
+			};
+			if (cvd) color = _cvd(color);
+			// if (displayable(color)) column.push({ hex: _toHex(color), lch: color });
+			// else column.push(null);
+			column.push({ hex: _toHex(color), lch: color });
+		}
+		colors.push(column);
+	}
+
+	return colors;
+};
+
+const make2DOKLCHMap = (chroma = 0.3, cvd = false) => {
+	const colors = [];
+	for (let h = 0; h < 360; h++) {
+		let column = [];
+		for (let l = 0; l < 1; l += 0.01) {
+			let color = {
+				mode: 'oklch',
 				h,
 				c: chroma,
 				l
@@ -351,6 +300,7 @@ export {
 	generatePalette,
 	paletteToCvdPalette,
 	make2DCIELCHMap,
+	make2DOKLCHMap,
 	hexToLCH,
 	LCHToHex,
 	modifyColor,

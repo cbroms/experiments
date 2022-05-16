@@ -3,11 +3,13 @@
 </script>
 
 <script>
+	import { debounce } from 'lodash';
 	import {
 		getOpposite,
 		hexToLCH,
 		LCHToHex,
 		make2DCIELCHMap,
+		make2DOKLCHMap,
 		generateRandom,
 		generatePalette,
 		paletteToCvdPalette,
@@ -31,8 +33,8 @@
 	let mapColors;
 	let mapColorsCvd;
 
-	let distance = 0;
-	let distanceCvd = 0;
+	let distance = { max: 0, min: 0, sum: 0 };
+	let distanceCvd = { ...distance };
 
 	let lightnessMax;
 	let lightnessMin;
@@ -40,26 +42,32 @@
 	let adjustForCvd = false;
 
 	onMount(() => {
-		lightnessMax = 85;
-		lightnessMin = 50;
-		chroma = 120;
+		// lightnessMax = 85;
+		// lightnessMin = 50;
+		// chroma = 120;
+
+		lightnessMax = 0.9;
+		lightnessMin = 0.5;
+		chroma = 0.2;
 
 		inputColor = generateRandom(chroma, [lightnessMin, lightnessMax]);
-		mapColors = make2DCIELCHMap(chroma, false);
-		mapColorsCvd = make2DCIELCHMap(chroma, true);
+		// mapColors = make2DCIELCHMap(chroma, false);
+		// mapColorsCvd = make2DCIELCHMap(chroma, true);
+		mapColors = make2DOKLCHMap(chroma, false);
+		mapColorsCvd = make2DOKLCHMap(chroma, true);
 
 		updateValuesFromColor();
 	});
 
 	const updateValuesFromColor = () => {
-		const newChoma = Math.round(inputColor.c);
+		const newChoma = inputColor.c;
 		if (newChoma !== chroma) {
-			mapColors = make2DCIELCHMap(newChoma);
-			mapColorsCvd = make2DCIELCHMap(newChoma, true);
+			mapColors = make2DOKLCHMap(newChoma);
+			mapColorsCvd = make2DOKLCHMap(newChoma, true);
 		}
 		chroma = newChoma;
-		lightness = Math.round(inputColor.l);
-		hue = Math.round(inputColor.h);
+		lightness = inputColor.l;
+		hue = inputColor.h;
 
 		updateColorPalette();
 	};
@@ -85,29 +93,27 @@
 	};
 
 	const onChromaInput = (e) => {
-		inputColor = modifyColor(inputColor, { c: parseInt(e.target.value) });
+		inputColor = modifyColor(inputColor, { c: parseFloat(e.target.value) });
 		updateValuesFromColor();
 	};
 
 	const onHueInput = (e) => {
-		inputColor = modifyColor(inputColor, { h: parseInt(e.target.value) });
+		inputColor = modifyColor(inputColor, { h: parseFloat(e.target.value) });
 		updateValuesFromColor();
 	};
 
-	const onInput = (e) => {
+	const onColorInput = debounce((e) => {
 		inputColor = hexToLCH(e.target.value);
 		updateValuesFromColor();
-		// colors = generatePalette(inputColor, 10, [50, 90]);
-		// colorsCvd = paletteToCvdPalette(colors);
-	};
+	}, 300);
 
 	const onMinLightnessInput = (e) => {
-		lightnessMin = parseInt(e.target.value);
+		lightnessMin = parseFloat(e.target.value);
 		updateValuesFromColor();
 	};
 
 	const onMaxLightnessInput = (e) => {
-		lightnessMax = parseInt(e.target.value);
+		lightnessMax = parseFloat(e.target.value);
 		updateValuesFromColor();
 	};
 </script>
@@ -119,10 +125,18 @@
 
 <section>
 	<div>hello</div>
-	<input on:input={onInput} type="color" value={LCHToHex(inputColor)} />
+	<input on:input={onColorInput} type="color" value={LCHToHex(inputColor)} />
 	<div>
 		<label for="chroma">Chroma</label>
-		<input on:change={onChromaInput} value={chroma} id="chroma" type="range" min="0" max="133" />
+		<input
+			on:change={onChromaInput}
+			value={chroma}
+			id="chroma"
+			type="range"
+			min="0"
+			max="0.322"
+			step="0.01"
+		/>
 		<label for="hue">Hue</label>
 		<input on:change={onHueInput} value={hue} id="hue" type="range" min="0" max="360" />
 		<div>
@@ -134,7 +148,8 @@
 				id="min-lightness"
 				type="number"
 				min="0"
-				max="100"
+				max="1"
+				step="0.01"
 			/>
 			<label for="max-lightness">Max</label>
 			<input
@@ -143,7 +158,8 @@
 				id="max-lightness"
 				type="number"
 				min="0"
-				max="100"
+				max="1"
+				step="0.01"
 			/>
 		</div>
 	</div>
@@ -174,7 +190,7 @@
 		<DistanceMetrics distance={distanceCvd} />
 	</div>
 	<div>
-		<ColorMap colors={mapColorsCvd} palette={colors} {lightnessMax} {lightnessMin} />
+		<ColorMap colors={mapColorsCvd} palette={colorsCvd} {lightnessMax} {lightnessMin} />
 	</div>
 </section>
 
