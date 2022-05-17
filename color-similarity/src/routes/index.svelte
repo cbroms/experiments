@@ -1,3 +1,7 @@
+<script context="module">
+	export const prerender = true;
+</script>
+
 <script>
 	import Projection3D from '$lib/components/Projection3D.svelte';
 	import Projection2D from '$lib/components/Projection2D.svelte';
@@ -102,6 +106,11 @@
 		repaintMap();
 	};
 </script>
+
+<svelte:head>
+	<title>Home</title>
+	<meta name="description" content="Svelte demo app" />
+</svelte:head>
 
 <div class="map-wrapper">
 	<div class="map-controls">
