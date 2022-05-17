@@ -50,7 +50,7 @@ const _getPaletteDistance = (palette = []) => {
 	for (let i = 1; i < palette.length; i++) {
 		distanceSum += _distance(palette[i - 1].lch, palette[i].lch);
 	}
-	return distanceSum;
+	return distanceSum / palette.length;
 };
 
 // get the min/max distance between each combination of colors in a palette
@@ -186,7 +186,6 @@ const generatePalette = (
 		paletteCvd.push({ hex: _toHex(_cvd(bestColor)), lch: _cvd(bestColor) });
 		currentColor = bestColor;
 	}
-
 	return {
 		colors: palette,
 		distance: _getPaletteDistanceMetrics(palette)
@@ -285,6 +284,11 @@ const LCHToHex = (lchColor = {}) => {
 	return _toHex(lchColor);
 };
 
+const makeLCHColor = (lchColorParams) => {
+	const color = _lch({ mode: 'oklch', ...lchColorParams });
+	return { hex: _toHex(color), lch: color };
+};
+
 const modifyColor = (lchColor = {}, modification = {}) => {
 	return _lch({ ...lchColor, ...modification });
 };
@@ -303,6 +307,7 @@ export {
 	make2DOKLCHMap,
 	hexToLCH,
 	LCHToHex,
+	makeLCHColor,
 	modifyColor,
 	generatePaletteIcosahedron
 };

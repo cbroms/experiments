@@ -10,7 +10,7 @@ const setupCanvas = (width = 720, height = 300) => {
 	return canvas;
 };
 
-const renderColorMap = (canvas, colorMap = [], palette = []) => {
+const renderColorMap = (canvas, colorMap = [], palette = [], lightnessRange = [], stretch = 1) => {
 	const ctx = canvas.getContext('2d');
 
 	ctx.clearRect(0, 0, 720, 300);
@@ -24,21 +24,18 @@ const renderColorMap = (canvas, colorMap = [], palette = []) => {
 		}
 	}
 
-	// if (lightnessMax) {
-	// 	ctx.strokeStyle = '#fff';
-	// 	ctx.beginPath();
-	// 	ctx.moveTo(0, lightnessMax * 100);
-	// 	ctx.lineTo(360, lightnessMax * 100);
-	// 	ctx.stroke();
-	// }
+	if (lightnessRange.length === 2) {
+		ctx.strokeStyle = '#fff';
+		ctx.beginPath();
+		ctx.moveTo(0, 99 - lightnessRange[1] * 100);
+		ctx.lineTo(360, 99 - lightnessRange[1] * 100);
+		ctx.stroke();
 
-	// if (lightnessMin) {
-	// 	ctx.strokeStyle = '#fff';
-	// 	ctx.beginPath();
-	// 	ctx.moveTo(0, lightnessMin * 100);
-	// 	ctx.lineTo(360, lightnessMin * 100);
-	// 	ctx.stroke();
-	// }
+		ctx.beginPath();
+		ctx.moveTo(0, 99 - lightnessRange[0] * 100);
+		ctx.lineTo(360, 99 - lightnessRange[0] * 100);
+		ctx.stroke();
+	}
 
 	for (const color of palette) {
 		const h = Math.round(color.lch.h);
@@ -47,8 +44,8 @@ const renderColorMap = (canvas, colorMap = [], palette = []) => {
 		ctx.fillStyle = color.hex;
 		ctx.strokeStyle = '#fff';
 		ctx.strokeWidth = '1px';
-		ctx.fillRect(h - 5, l - 5, 10, 10);
-		ctx.strokeRect(h - 5, l - 5, 10, 10);
+		ctx.fillRect(h - 5, 99 - l - 5, 10 * stretch, 10);
+		ctx.strokeRect(h - 5, 99 - l - 5, 10 * stretch, 10);
 	}
 
 	return canvas;

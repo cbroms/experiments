@@ -7,8 +7,10 @@
 	export let canvas;
 	export let radius;
 
+	export let maxRadius;
+
 	const height = 500;
-	const width = 400;
+	const width = 500;
 
 	let projectionElt;
 
@@ -42,15 +44,15 @@
 		scene.add(line);
 
 		// set up bounding cylinder
-		const cylinderGeometry = new THREE.CylinderGeometry(2, 2, 2, 80, 1);
+		const cylinderGeometry = new THREE.CylinderGeometry(maxRadius, maxRadius, 2, 80, 1);
 		const cylinderEdges = new THREE.EdgesGeometry(cylinderGeometry, 10);
 		const edgeLines = new THREE.LineSegments(cylinderEdges, lineMaterial);
 		scene.add(edgeLines);
 
 		const controls = new OrbitControls(camera, renderer.domElement);
 		controls.maxPolarAngle = Math.PI / 2;
-		controls.autoRotate = true;
-		controls.autoRotateSpeed = 4;
+		// controls.autoRotate = true;
+		// controls.autoRotateSpeed = 4;
 		controls.enableDamping = true;
 		controls.dampingFactor = 0.05;
 
