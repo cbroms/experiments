@@ -5,7 +5,7 @@
 	import { make2DOKLCHMap, makeLCHColor, generatePalette } from '$lib/colors.js';
 	import { setupCanvas, renderColorMap } from '$lib/canvas';
 	import { onMount } from 'svelte';
-	import { debounce } from 'lodash';
+	import { debounce } from 'lodash-es';
 
 	import InputControl from '$lib/components/InputControl.svelte';
 	import Swatch from '$lib/components/Swatch.svelte';

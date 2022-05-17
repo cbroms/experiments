@@ -7,14 +7,20 @@ import {
 	clampRgb,
 	converter,
 	filterDeficiencyProt,
-	differenceEuclidean
-} from 'culori';
+	differenceEuclidean,
+	differenceHueChroma,
+	modeOklch,
+	useMode
+} from 'culori/fn';
 
 const L_STEP_SIZE = 0.01;
 const H_STEP_SIZE = 1;
 
-const _lch = converter('oklch');
+const lch = useMode(modeOklch);
+
+const _lch = lch;
 const _cvd = filterDeficiencyProt(1);
+// const _distance = differenceHueChroma;
 const _distance = differenceEuclidean('oklch');
 
 const _random = (chroma = 0, lRange = [0, 100]) => {
@@ -30,7 +36,7 @@ const _rotateHueByDegrees = (h, d) => {
 };
 
 const _toHex = (lch) => {
-	const clamped = clampChroma(lch);
+	const clamped = clampChroma(lch, 'oklch');
 	return formatHex(clamped);
 };
 

@@ -1,5 +1,5 @@
 <script>
-	export let hex;
+	export let hex = '#fff';
 </script>
 
 <div class="swatch" style="background-color: {hex};" />
