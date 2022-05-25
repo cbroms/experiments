@@ -1,22 +1,31 @@
 <script>
+	import { onMount } from 'svelte';
+
 	export let canvas;
+	export let width = 500;
+
+	const height = 400;
 
 	let myCanvas;
 	let ctx;
 
+	onMount(() => {
+		ctx = myCanvas.getContext('2d');
+	});
+
 	$: {
-		if (canvas !== undefined && myCanvas) {
-			console.log(canvas);
-			if (!ctx) ctx = myCanvas.getContext('2d');
-			ctx.clearRect(0, 0, 500, 300);
-
-			const imageSrc = canvas.toDataURL('image/png');
-			const image = new Image();
-			image.src = imageSrc;
-
-			ctx.drawImage(image, 0, 0);
+		if (canvas && ctx) {
+			ctx.clearRect(0, 0, width, height);
+			ctx.drawImage(canvas, 0, 0);
 		}
 	}
 </script>
 
-<canvas bind:this={myCanvas} height="300" width="500" />
+<canvas bind:this={myCanvas} {height} {width} />
+
+<style>
+	canvas {
+		overflow: hidden;
+		border-radius: 12px;
+	}
+</style>
