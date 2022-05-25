@@ -2,6 +2,9 @@
 	import { onMount } from 'svelte';
 
 	export let canvas;
+	export let width = 500;
+
+	const height = 400;
 
 	let myCanvas;
 	let ctx;
@@ -12,13 +15,13 @@
 
 	$: {
 		if (canvas && ctx) {
-			ctx.clearRect(0, 0, 500, 400);
+			ctx.clearRect(0, 0, width, height);
 			ctx.drawImage(canvas, 0, 0);
 		}
 	}
 </script>
 
-<canvas bind:this={myCanvas} height="400" width="500" />
+<canvas bind:this={myCanvas} {height} {width} />
 
 <style>
 	canvas {

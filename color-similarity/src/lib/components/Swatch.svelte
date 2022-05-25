@@ -7,9 +7,8 @@
 <style>
 	.swatch {
 		display: inline-block;
-		margin: 20px;
-		height: 100px;
-		width: 100px;
-		border-radius: 4px;
+		height: 60px;
+		width: 60px;
+		border-radius: var(--block-border-radius);
 	}
 </style>

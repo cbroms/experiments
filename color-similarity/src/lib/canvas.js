@@ -1,4 +1,4 @@
-const setupCanvas = (width = 720, height = 300) => {
+const setupCanvas = (width = 600, height = 300) => {
 	const canvas = document.createElement('canvas');
 	canvas.height = height;
 	canvas.width = width;
@@ -15,6 +15,7 @@ const renderColorMap = (canvas, colorMap = [], palette = [], lightnessRange = []
 
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+	console.log(canvas.width / 360);
 	for (let h = 0; h < 360; h++) {
 		for (let l = 0; l < 100; l++) {
 			if (colorMap[h][99 - l] !== null) {

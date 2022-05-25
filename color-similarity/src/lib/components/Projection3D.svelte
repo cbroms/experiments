@@ -8,12 +8,12 @@
 	export let canvas;
 	export let radius;
 	export let rotation = 200;
+	export let width = 500;
 
 	const minRadius = 0.2;
 	const maxRadius = 2;
 
 	const height = 400;
-	const width = 500;
 	const cylinderHeight = height / 100;
 
 	const ANIMATION_DURATION_MS = 2000;
