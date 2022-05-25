@@ -74,7 +74,7 @@
 	};
 
 	const updateColorPalette = () => {
-		const newPalette = generatePalette(inputColor, 10, [lightnessMin, lightnessMax], adjustForCvd);
+		const newPalette = generatePalette(inputColor, 9, [lightnessMin, lightnessMax], adjustForCvd);
 		const newPaletteCvd = paletteToCvdPalette(newPalette);
 		// const newPalette = generatePaletteIcosahedron(chroma);
 		colors = newPalette.colors;
@@ -115,6 +115,42 @@
 
 	const onMaxLightnessInput = (e) => {
 		lightnessMax = parseFloat(e.target.value);
+		updateValuesFromColor();
+	};
+
+	const delay = (n) => {
+		return new Promise(function (resolve) {
+			setTimeout(resolve, n);
+		});
+	};
+
+	const onGenerateOptimalPalette = async (e) => {
+		let paletteOptions = [];
+		for (let h = 1; h <= 360; h++) {
+			inputColor = { mode: 'oklch', c: chroma, l: lightnessMin, h };
+			updateValuesFromColor();
+			await delay(20);
+			paletteOptions.push({ color: inputColor, distance, distanceCvd });
+		}
+
+		const distancesMean =
+			paletteOptions.reduce((a, p) => p.distance.min + a, 0) / paletteOptions.length;
+		const distancesCvdMean =
+			paletteOptions.reduce((a, p) => p.distanceCvd.min + a, 0) / paletteOptions.length;
+
+		let maxDistFromMean = 0;
+		let largestDistIdx = 0;
+
+		for (let i = 0; i < paletteOptions.length; i++) {
+			const distFromMean = paletteOptions[i].distance.min - distancesMean;
+			const distFromMeanCvd = paletteOptions[i].distanceCvd.min - distancesCvdMean;
+			if (distFromMean + distFromMeanCvd > maxDistFromMean) {
+				maxDistFromMean = distFromMean + distFromMeanCvd;
+				largestDistIdx = i;
+			}
+		}
+
+		inputColor = paletteOptions[largestDistIdx].color;
 		updateValuesFromColor();
 	};
 </script>
@@ -167,7 +203,7 @@
 	<div />
 
 	<input type="checkbox" on:change={onCvdCheck} />
-	<!-- <button on:click={randomColor}>Generate Random</button> -->
+	<button on:click={onGenerateOptimalPalette}>Generate Optimal Set</button>
 
 	<div>
 		{#each colors as col}
