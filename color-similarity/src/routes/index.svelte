@@ -8,6 +8,7 @@
 
 	import { make2DOKLCHMap, makeLCHColor, generatePalette } from '$lib/colors.js';
 	import { setupCanvas, renderColorMap } from '$lib/canvas';
+	import { map } from '$lib/math';
 	import { onMount } from 'svelte';
 	import { debounce } from 'lodash-es';
 
@@ -33,19 +34,13 @@
 
 	let radius = null;
 
-	const maxProjectionRadius = 2;
-	const minProjectionRadius = 0.2;
-
 	onMount(() => {
-		canvas = setupCanvas();
+		canvas = setupCanvas(720, 400);
 		repaintMap();
 	});
 
 	const chromaToRadius = (chroma) => {
-		return (
-			((chroma - 0) / (0.322 - 0)) * (maxProjectionRadius - minProjectionRadius) +
-			minProjectionRadius
-		);
+		return map(chroma, 0, 0.322, 0, 1);
 	};
 
 	const repaintMap = debounce(() => {
@@ -172,14 +167,14 @@
 	</div>
 
 	<div class="map-content">
-		<!-- <div>
+		<div>
 			<input id="projection" type="checkbox" checked={project3D} on:change={onProject3DChange} />
 			<label for="projection">3D Projection</label>
-		</div> -->
+		</div>
 
 		<div class="map">
 			{#if project3D}
-				<Projection3D {canvas} {radius} maxRadius={maxProjectionRadius} />
+				<Projection3D {canvas} {radius} rotation={hue} />
 			{:else}
 				<Projection2D {canvas} />
 			{/if}
@@ -206,10 +201,12 @@
 
 	.map {
 		width: 500px;
+		height: auto;
 		background-color: #f5f5f5;
 		display: flex;
 		justify-content: center;
 		border-radius: 12px;
+		background-clip: border-box;
 	}
 
 	.map-content {

@@ -5,7 +5,7 @@ const setupCanvas = (width = 720, height = 300) => {
 	canvas.style.visibility = 'hidden';
 
 	const ctx = canvas.getContext('2d');
-	ctx.scale(2, 3);
+	ctx.scale(2, 4);
 
 	return canvas;
 };
@@ -13,11 +13,11 @@ const setupCanvas = (width = 720, height = 300) => {
 const renderColorMap = (canvas, colorMap = [], palette = [], lightnessRange = [], stretch = 1) => {
 	const ctx = canvas.getContext('2d');
 
-	ctx.clearRect(0, 0, 720, 300);
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 	for (let h = 0; h < 360; h++) {
 		for (let l = 0; l < 100; l++) {
-			if (colorMap[h][l] !== null) {
+			if (colorMap[h][99 - l] !== null) {
 				ctx.fillStyle = colorMap[h][99 - l].hex;
 				ctx.fillRect(h, l, 1, 1);
 			}
@@ -44,8 +44,8 @@ const renderColorMap = (canvas, colorMap = [], palette = [], lightnessRange = []
 		ctx.fillStyle = color.hex;
 		ctx.strokeStyle = '#fff';
 		ctx.strokeWidth = '1px';
-		ctx.fillRect(h - 5, 99 - l - 5, 10 * stretch, 10);
-		ctx.strokeRect(h - 5, 99 - l - 5, 10 * stretch, 10);
+		ctx.fillRect(h - 5, 99 - l - 5, 10 * stretch, 7);
+		ctx.strokeRect(h - 5, 99 - l - 5, 10 * stretch, 7);
 	}
 
 	return canvas;
