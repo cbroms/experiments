@@ -9,5 +9,14 @@
 	</head>
 	<body>
 		<div>%svelte.body%</div>
+		<script src="%svelte.assets%/hyperfov-link-previews.js"></script>
+
+		<script>
+			document.querySelectorAll('a').forEach((elt) => {
+				linkPreview(elt, {
+					backend: 'https://preview-worker.hyperfov.com/'
+				});
+			});
+		</script>
 	</body>
 </html>

@@ -36,6 +36,7 @@
 	}
 
 	select {
+		/* -webkit-appearance: none; */
 		margin: 5px 0;
 		font-size: var(--font-medium);
 		padding: 10px;

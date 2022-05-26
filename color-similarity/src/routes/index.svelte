@@ -22,10 +22,14 @@
 	<section>
 		<h2>Perceptually uniform color spaces</h2>
 		<p>
-			The problem with the basic RGB or HSL color spaces that are often used in color pickers is
-			they aren’t perceptually uniform. Meaning that changing the just hue also changes how light
-			the color appears, even if the lightness value doesn’t actually change. Here’s an example from
-			HSL, just changing the hue and keeping everything else fixed:
+			The problem with the basic <a
+				href="https://en.wikipedia.org/wiki/RGB_color_spaces"
+				target="_blank">RGB</a
+			>
+			or <a href="https://en.wikipedia.org/wiki/HSL_and_HSV" target="_blank">HSL</a> color spaces that
+			are often used in color pickers is they aren’t perceptually uniform. Meaning that changing the
+			just hue also changes how light the color appears, even if the lightness value doesn’t actually
+			change. Here’s an example from HSL, just changing the hue and keeping everything else fixed:
 		</p>
 		<SwatchLayout title="Changing hues in HSL">
 			<Swatch hex={'#4C6AFF'} />
@@ -38,9 +42,11 @@
 			colorspace.
 		</p>
 		<p>
-			In order to avoid this, our color palette needs to be generated in a perceptually uniform
-			color space: a space that has been designed to more closely mimic the way color is perceived
-			by the rods and cones in our eyes.
+			In order to avoid this, our color palette needs to be generated in a <a
+				href="https://en.wikipedia.org/wiki/Color_appearance_model"
+				target="_blank">perceptually uniform color space</a
+			>: a space that has been designed to more closely mimic the way color is perceived by the rods
+			and cones in our eyes.
 		</p>
 		<p>
 			In a perceptually uniform color space, changing one dimension doesn’t affect the perceptual
@@ -53,10 +59,16 @@
 			<Swatch hex={'#00AC4F'} />
 		</SwatchLayout>
 		<p>
-			There are lots of these perceptually uniform colorspaces out there, such as CIELAB, CIELUV,
-			CIECAM02, J<sub>z</sub>A<sub>z</sub>B<sub>z</sub>, and OKLAB. Each is a different
-			approximation and each have areas where they under and outperform their peers. I went with the
-			OKLAB space as it seemed to perform best all around.
+			There are lots of these perceptually uniform colorspaces out there, such as <a
+				href="https://en.wikipedia.org/wiki/CIELAB_color_space"
+				target="_blank">CIELAB</a
+			>, <a href="https://en.wikipedia.org/wiki/CIELUV" target="_blank">CIELUV</a>,
+			<a href="https://en.wikipedia.org/wiki/CIECAM02" target="_blank">CIECAM02</a>,
+			<a href="https://opg.optica.org/oe/fulltext.cfm?uri=oe-25-13-15131&id=368272" target="_blank"
+				>J<sub>z</sub>A<sub>z</sub>B<sub>z</sub></a
+			>, and <a href="https://bottosson.github.io/posts/oklab/" target="_blnak">OKLAB</a>. Each is a
+			different approximation and each have areas where they under and outperform their peers. I
+			went with the OKLAB space as it seemed to perform best all around.
 		</p>
 		<p>OKLAB has three dimensions:</p>
 		<ul>

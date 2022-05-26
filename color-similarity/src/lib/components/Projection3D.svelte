@@ -1,6 +1,6 @@
 <script>
 	import * as THREE from 'three';
-	import { OrbitControls } from '$lib/OrbitControls';
+	import { OrbitControls } from '$lib/libs/OrbitControls';
 	import { map } from '$lib/math';
 
 	import { onDestroy, onMount } from 'svelte';

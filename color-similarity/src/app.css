@@ -25,6 +25,11 @@ body {
 	font-size: var(--font-regular);
 }
 
+a {
+	text-decoration: none;
+	color: var(--accent);
+}
+
 label {
 	display: block;
 	color: var(--mid-grey);
@@ -41,4 +46,8 @@ select {
 input:focus,
 select:focus {
 	outline: 2px solid var(--accent);
+}
+
+h1 {
+	font-size: 36px;
 }

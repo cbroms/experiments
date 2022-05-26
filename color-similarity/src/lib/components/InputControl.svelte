@@ -91,6 +91,7 @@
 		background: var(--dark-grey);
 		cursor: pointer;
 		-webkit-appearance: none;
+		margin-top: -6px;
 	}
 
 	input[type='range']:focus::-webkit-slider-runnable-track {
