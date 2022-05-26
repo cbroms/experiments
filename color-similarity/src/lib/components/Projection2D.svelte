@@ -3,14 +3,16 @@
 
 	export let canvas;
 	export let width = 500;
+	export let height = 400;
 
-	const height = 400;
+	const baseHeight = 400;
 
 	let myCanvas;
 	let ctx;
 
 	onMount(() => {
 		ctx = myCanvas.getContext('2d');
+		ctx.scale(1, height / baseHeight);
 	});
 
 	$: {

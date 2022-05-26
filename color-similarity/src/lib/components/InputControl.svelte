@@ -7,6 +7,16 @@
 	export let step;
 	export let value;
 
+	export let interactiveId;
+
+	let id;
+
+	$: {
+		if (interactiveId && name) {
+			id = `${name.replaceAll(' ', '-')}-${interactiveId}`;
+		}
+	}
+
 	export let slider = true;
 
 	const dispatch = createEventDispatcher();
@@ -17,9 +27,9 @@
 </script>
 
 <div class="control-wrapper">
-	<label for={name}>{name}</label>
+	<label for={id}>{name}</label>
 	<div class="slider-control">
-		<input type="number" id={name} {max} {min} {value} {step} on:change={onChange} />
+		<input type="number" {id} {max} {min} {value} {step} on:change={onChange} />
 		{#if slider}
 			<div class="divider" />
 			<input type="range" {max} {min} {value} {step} on:input={onChange} />
@@ -29,12 +39,13 @@
 
 <style>
 	.control-wrapper {
-		margin: 20px 0;
+		margin: 5px 0;
+		display: inline-block;
 	}
 
 	.slider-control {
 		margin: 5px 0;
-		display: flex;
+		display: inline-flex;
 		border: 1px solid var(--mid-grey);
 		border-radius: var(--controls-border-radius);
 	}
@@ -44,10 +55,14 @@
 		border-right: 1px solid var(--mid-grey);
 	}
 
+	input {
+		margin: 2px;
+	}
+
 	input[type='number'] {
 		-webkit-appearance: none;
 		appearance: none;
-		width: 78px;
+		width: 100px;
 		padding: 10px;
 		font-size: var(--font-medium);
 		border: none;
@@ -56,7 +71,7 @@
 	input[type='range'] {
 		-webkit-appearance: none;
 		padding: 10px;
-		width: 100%;
+		width: 200px;
 	}
 
 	input[type='range']::-webkit-slider-runnable-track {

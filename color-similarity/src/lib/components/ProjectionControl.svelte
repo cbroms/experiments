@@ -1,7 +1,16 @@
 <script>
 	import { createEventDispatcher } from 'svelte';
 
+	export let interactiveId;
 	export let project3D = false;
+
+	let id;
+
+	$: {
+		if (interactiveId) {
+			id = `projection-${interactiveId}`;
+		}
+	}
 
 	const dispatch = createEventDispatcher();
 
@@ -12,8 +21,8 @@
 </script>
 
 <div class="projection-control">
-	<label for="projection">Projection</label>
-	<select id="projection" on:change={onChange}>
+	<label for={id}>Projection</label>
+	<select {id} on:change={onChange}>
 		<option value="cylindrical" selected={project3D}>Cylindrical</option>
 		<option value="flat" selected={!project3D}>Flat</option>
 	</select>
@@ -27,6 +36,7 @@
 	}
 
 	select {
+		margin: 5px 0;
 		font-size: var(--font-medium);
 		padding: 10px;
 		background-color: var(--primary-color);

@@ -2,6 +2,7 @@
 	import Projection3D from '$lib/components/Projection3D.svelte';
 	import Projection2D from '$lib/components/Projection2D.svelte';
 	import ProjectionControl from '$lib/components/ProjectionControl.svelte';
+	import InteractiveLayout from '$lib/components/interactives/InteractiveLayout.svelte';
 
 	import { make2DOKLCHMap, makeLCHColor, generatePalette } from '$lib/colors.js';
 	import { setupCanvas, renderColorMap } from '$lib/canvas';
@@ -12,8 +13,8 @@
 	import InputControl from '$lib/components/InputControl.svelte';
 	import Swatch from '$lib/components/Swatch.svelte';
 	import DistanceMetrics from '$lib/components/DistanceMetrics.svelte';
+	import SwatchLayout from '../SwatchLayout.svelte';
 
-	export let paletteMode = false;
 	let canvas;
 	let mapColors;
 
@@ -21,8 +22,6 @@
 	let lightness = 0.6;
 	let hue = 20;
 
-	let minLightness = 0.6;
-	let maxLightness = 0.8;
 	let numColors = 8;
 
 	let palette = { colors: [] };
@@ -31,6 +30,7 @@
 
 	let radius = null;
 	let width = 720;
+	let height;
 
 	onMount(() => {
 		canvas = setupCanvas(720, 400);
@@ -43,19 +43,12 @@
 
 	const repaintMap = debounce(() => {
 		const color = makeLCHColor({ l: lightness, c: chroma, h: hue });
-		if (!paletteMode) {
-			palette = { colors: [color] };
-		} else {
-			// generate palette
-			palette = generatePalette(color.lch, numColors, [minLightness, maxLightness]);
-		}
+
+		// generate palette
+		palette = generatePalette(color.lch, numColors, [lightness, lightness]);
+
 		mapColors = make2DOKLCHMap(chroma);
-		canvas = renderColorMap(
-			canvas,
-			mapColors,
-			palette.colors,
-			paletteMode ? [minLightness, maxLightness] : []
-		);
+		canvas = renderColorMap(canvas, mapColors, palette.colors);
 		radius = chromaToRadius(chroma);
 	}, 300);
 
@@ -74,16 +67,6 @@
 		repaintMap();
 	};
 
-	const onMinLightnessChange = (e) => {
-		minLightness = e.detail.value;
-		repaintMap();
-	};
-
-	const onMaxLightnessChange = (e) => {
-		maxLightness = e.detail.value;
-		repaintMap();
-	};
-
 	const onProject3DChange = (e) => {
 		project3D = e.detail;
 		repaintMap();
@@ -95,100 +78,68 @@
 	};
 </script>
 
-<svelte:head>
-	<title>Home</title>
-	<meta name="description" content="Svelte demo app" />
-</svelte:head>
-
-<div class="map-wrapper">
-	<div class="map-content">
-		<div class="map">
-			{#if project3D}
-				<Projection3D {canvas} {radius} rotation={hue} {width} />
-			{:else}
-				<Projection2D {canvas} {width} />
-			{/if}
-			<ProjectionControl {project3D} on:change={onProject3DChange} />
-		</div>
+<InteractiveLayout>
+	<div slot="map" bind:clientHeight={height} class="map">
+		{#if project3D}
+			<Projection3D {canvas} {radius} rotation={hue} {width} {height} />
+		{:else}
+			<Projection2D {canvas} {width} height={Math.round(height) - 5} />
+		{/if}
+		<ProjectionControl {project3D} interactiveId={2} on:change={onProject3DChange} />
 	</div>
-	<div class="map-controls">
+
+	<div slot="controls">
 		<InputControl
-			name="Chroma"
+			name="Palette size"
+			min={2}
+			max={40}
+			value={numColors}
+			step={1}
+			interactiveId={2}
+			on:change={onNumColorsChange}
+			slider={false}
+		/>
+		<InputControl
+			name="Palette chroma"
 			min={0}
 			max={0.322}
 			value={chroma}
 			step={0.01}
+			interactiveId={2}
 			on:change={onChromaChange}
 		/>
 		<InputControl
-			name="Lightness"
+			name="Palette lightness"
 			min={0}
 			max={0.99}
 			value={lightness}
 			step={0.01}
+			interactiveId={2}
 			on:change={onLightnessChange}
 		/>
-		<InputControl name="Hue" min={0} max={360} value={hue} step={1} on:change={onHueChange} />
+		<InputControl
+			name="First color hue"
+			min={0}
+			max={360}
+			value={hue}
+			step={1}
+			interactiveId={2}
+			on:change={onHueChange}
+		/>
 
-		<div class="map-palette">
+		<SwatchLayout>
 			{#each palette.colors as color}
 				<Swatch hex={color.hex} />
 			{/each}
-		</div>
-		{#if paletteMode && palette.distance}
+		</SwatchLayout>
+		{#if palette.distance}
 			<DistanceMetrics distance={palette.distance} />
 		{/if}
-
-		{#if paletteMode}
-			<InputControl
-				name="Palette size"
-				min={2}
-				max={40}
-				value={numColors}
-				step={1}
-				on:change={onNumColorsChange}
-				slider={false}
-			/>
-			<InputControl
-				name="L* Min"
-				min={0}
-				max={0.99}
-				value={minLightness}
-				step={0.01}
-				on:change={onMinLightnessChange}
-				slider={false}
-			/>
-			<InputControl
-				name="L* Max"
-				min={0}
-				max={0.99}
-				value={maxLightness}
-				step={0.01}
-				on:change={onMaxLightnessChange}
-				slider={false}
-			/>
-		{/if}
 	</div>
-</div>
+</InteractiveLayout>
 
 <style>
-	.map-wrapper {
-		display: flex;
-		gap: 40px;
-	}
-
 	.map {
-		height: auto;
-		background-color: #f5f5f5;
-		display: flex;
-		justify-content: center;
-		border-radius: 12px;
-		background-clip: border-box;
-		position: relative;
-	}
-
-	.map-content {
-		display: flex;
-		flex-flow: column;
+		height: 100%;
 	}
 </style>

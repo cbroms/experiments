@@ -39,7 +39,6 @@ label {
 input,
 select {
 	height: 41px;
-	margin: 2px;
 }
 
 input:focus,

@@ -9,11 +9,16 @@
 	export let radius;
 	export let rotation = 200;
 	export let width = 500;
+	export let height = 400;
+
+	let thisWidth;
+	let thisHeight;
+
+	let windowWidth;
 
 	const minRadius = 0.2;
 	const maxRadius = 2;
 
-	const height = 400;
 	const cylinderHeight = height / 100;
 
 	const ANIMATION_DURATION_MS = 2000;
@@ -27,17 +32,61 @@
 	let scene;
 	let camera;
 	let renderer;
+	let controls;
 
 	let geometry = null;
 	let materials = [];
 	let cylinder = null;
 	let texture = null;
 
+	$: {
+		if (windowWidth < 720) {
+			thisWidth = windowWidth - 20;
+		} else {
+			thisWidth = width;
+		}
+	}
+
+	$: {
+		thisWidth = width;
+		thisHeight = height > 400 ? height : 400;
+	}
+
+	$: {
+		if (thisHeight && thisWidth && renderer) {
+			// if the height changes, set the camera and controls up again
+			renderer.setSize(thisWidth, thisHeight);
+
+			camera = new THREE.OrthographicCamera(
+				thisWidth / -2,
+				thisWidth / 2,
+				thisHeight / 2,
+				thisHeight / -2
+			);
+			camera.position.z = 5;
+			camera.position.y = 1;
+			camera.zoom = 75;
+			camera.updateProjectionMatrix();
+
+			controls = new OrbitControls(camera, renderer.domElement);
+			controls.maxPolarAngle = Math.PI / 2;
+			controls.enableDamping = true;
+			controls.dampingFactor = 0.05;
+			controls.minZoom = 40;
+			controls.maxZoom = 120;
+		}
+	}
+
 	onMount(() => {
 		scene = new THREE.Scene();
-		camera = new THREE.OrthographicCamera(width / -2, width / 2, height / 2, height / -2);
+		camera = new THREE.OrthographicCamera(
+			thisWidth / -2,
+			thisWidth / 2,
+			thisHeight / 2,
+			thisHeight / -2
+		);
 		renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-		renderer.setSize(width, height);
+		renderer.setSize(thisWidth, thisHeight);
 		projectionElt.appendChild(renderer.domElement);
 
 		camera.position.z = 5;
@@ -71,7 +120,7 @@
 		const edgeLines = new THREE.LineSegments(cylinderEdges, lineMaterial);
 		scene.add(edgeLines);
 
-		const controls = new OrbitControls(camera, renderer.domElement);
+		controls = new OrbitControls(camera, renderer.domElement);
 		controls.maxPolarAngle = Math.PI / 2;
 		// controls.autoRotate = true;
 		// controls.autoRotateSpeed = 4;
@@ -165,5 +214,7 @@
 		cleanupScene();
 	});
 </script>
+
+<svelte:window bind:innerWidth={windowWidth} />
 
 <div bind:this={projectionElt} />
