@@ -4,6 +4,9 @@ import adapter from '@sveltejs/adapter-static';
 const config = {
 	kit: {
 		adapter: adapter(),
+		files: {
+			assets: 'static'
+		},
 
 		// Override http methods in the Todo forms
 		methodOverride: {
