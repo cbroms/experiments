@@ -11,7 +11,7 @@
   .map-wrapper {
     display: flex;
     gap: 40px;
-    margin: 48px 0;
+    margin: 2rem 0;
     width: 100%;
   }
 

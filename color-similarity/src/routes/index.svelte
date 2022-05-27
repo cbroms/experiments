@@ -281,10 +281,12 @@ for (let i = 0; i < numColors; i += stepSize) {
     <h3>Perceptually uniform color spaces</h3>
     <p>
       In order to avoid this, our color palette needs to be generated in a <a
-        href="https://en.wikipedia.org/wiki/Color_appearance_model"
+        href="https://programmingdesignsystems.com/color/perceptually-uniform-color-spaces/"
         target="_blank">perceptually uniform color space</a
-      >: a space that has been designed to more closely mimic the way color is perceived by the rods
-      and cones in our eyes.
+      >: a space that has been designed to
+      <a href="https://en.wikipedia.org/wiki/Color_appearance_model" target="_blank"
+        >more closely mimic the way color is perceived</a
+      > by the rods and cones in our eyes.
     </p>
     <p>
       In a perceptually uniform color space, changing one dimension doesn’t affect the perceptual
@@ -348,8 +350,9 @@ for (let i = 0; i < numColors; i += stepSize) {
     <p>
       One useful characteristic of a colorspace like OKLCh is that measuring how different two
       colors appear is quite easy. Since the colorspace has already been adjusted to be perceptually
-      uniform, the distance between two colors in space can be interpreted as the perceptual
-      distance between the colors.
+      uniform, the <a href="https://en.wikipedia.org/wiki/Color_difference" target="_blank"
+        >distance between two colors in space</a
+      > can be interpreted as the perceptual distance between the colors.
     </p>
     <p>
       So in order to get the most perceptually most distinct color from another, we rotate the hue
@@ -409,17 +412,33 @@ for (let i = 0; i < numColors; i += stepSize) {
   <section>
     <h2>Generate color sets</h2>
     <p>
-      With that we have a quick and simple way of creating maximally distinct sets of colors with a
-      few useful parameters.
+      Now we have a quick and simple way of creating maximally distinct sets of colors with a few
+      useful parameters.
     </p>
     <Interactive4 />
+    <details>
+      <summary>More color set generators and resources</summary>
+      <ul>
+        <li>
+          <a href="http://vrl.cs.brown.edu/color" target="_blank">Colorgorical</a>.
+        </li>
+        <li>
+          <a href="https://medialab.github.io/iwanthue/" target="_blank">iWantHue</a>.
+        </li>
+        <li>
+          <a href="https://colorbrewer2.org" target="_blank">Colorbrewer2</a>.
+        </li>
+        <li>
+          <a href="https://leonardocolor.io/scales.html" target="_blank">Leonardo</a>.
+        </li>
+      </ul>
+    </details>
     <h3>Next</h3>
     <p>
       One obvious limitation to this method is it assumes perfect color vision. An important
       addition would be to adjust for deuteranopia, protanopia, and tritanopia. Naturally the number
       of colors in the palette will be much lower, but it should be possible to adjust the
-      colorspace to account for these types of vision and pick colors taking these spaces into
-      account.
+      colorspace to account for these types of vision.
     </p>
   </section>
   <footer>
@@ -446,15 +465,15 @@ for (let i = 0; i < numColors; i += stepSize) {
   }
 
   h1 {
-    margin-top: 5rem;
+    margin-top: 8rem;
   }
 
   h2 {
-    margin-top: 3rem;
+    margin-top: 5rem;
   }
 
   h3 {
-    margin-top: 2rem;
+    margin-top: 3rem;
   }
 
   article {
