@@ -15,7 +15,6 @@
 	}
 
 	.palette-label {
-		margin-top: 10px;
 		width: 100%;
 		color: var(--mid-grey);
 		font-size: var(--font-small);

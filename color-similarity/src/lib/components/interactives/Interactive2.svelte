@@ -22,7 +22,7 @@
 	let lightness = 0.6;
 	let hue = 20;
 
-	let numColors = 8;
+	let numColors = 2;
 
 	let palette = { colors: [] };
 
