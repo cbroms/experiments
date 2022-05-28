@@ -1,53 +1,66 @@
 :root {
-	--primary-color: #ffffff;
-	--secondary-color: #d0dde9;
-	--font-small: 12px;
-	--font-medium: 14px;
-	--font-regular: 18px;
+  --primary-color: #ffffff;
+  --secondary-color: #d0dde9;
+  --font-small: 12px;
+  --font-medium: 14px;
+  --font-regular: 18px;
 
-	--mid-grey: rgb(129, 129, 129);
-	--dark-grey: rgb(22, 22, 22);
-	--accent: rgb(75, 72, 255);
+  --mid-grey: rgb(129, 129, 129);
+  --dark-grey: rgb(22, 22, 22);
+  --accent: rgb(75, 72, 255);
 
-	--controls-border-radius: 3px;
-	--block-border-radius: 12px;
+  --controls-border-radius: 3px;
+  --block-border-radius: 12px;
 }
 
 * {
-	box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 body {
-	min-height: 100vh;
-	margin: 0;
-	background-color: var(--primary-color);
-	color: var(--dark-grey);
-	font-size: var(--font-regular);
+  min-height: 100vh;
+  margin: 0;
+  background-color: var(--primary-color);
+  color: var(--dark-grey);
+  font-size: var(--font-regular);
 }
 
 a {
-	text-decoration: none;
-	color: var(--accent);
+  text-decoration: none;
+  color: var(--accent);
 }
 
 label {
-	display: block;
-	color: var(--mid-grey);
-	font-size: var(--font-small);
-	text-transform: uppercase;
-	font-weight: bold;
+  display: block;
+  color: var(--mid-grey);
+  font-size: var(--font-small);
+  text-transform: uppercase;
+  font-weight: bold;
 }
 
 input,
 select {
-	height: 41px;
+  height: 41px;
 }
 
 input:focus,
 select:focus {
-	outline: 2px solid var(--accent);
+  outline: 2px solid var(--accent);
 }
 
 h1 {
-	font-size: 36px;
+  font-size: 38px;
+}
+
+pre,
+code {
+  font-size: var(--font-medium);
+  border-radius: var(--block-border-radius);
+}
+
+.label {
+  color: var(--mid-grey);
+  font-size: var(--font-small);
+  text-transform: uppercase;
+  font-weight: bold;
 }

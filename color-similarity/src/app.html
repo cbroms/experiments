@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" href="%svelte.assets%/favicon.png" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link rel="stylesheet" href="%svelte.assets%/global.css" />
-		%svelte.head%
-	</head>
-	<body>
-		<div>%svelte.body%</div>
-		<script src="%svelte.assets%/hyperfov-link-previews.js"></script>
-
-		<script>
-			document.querySelectorAll('a').forEach((elt) => {
-				linkPreview(elt, {
-					backend: 'https://preview-worker.hyperfov.com/'
-				});
-			});
-		</script>
-	</body>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%svelte.assets%/favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="%svelte.assets%/global.css" />
+    %svelte.head%
+  </head>
+  <body>
+    <div>%svelte.body%</div>
+    <script src="%svelte.assets%/hyperfov-link-previews.js"></script>
+    <script src="%svelte.assets%/highlight.min.js"></script>
+    <script>
+      window.onload = (event) => {
+        document.querySelectorAll('a').forEach((elt) => {
+          linkPreview(elt, {
+            backend: 'https://preview-worker.hyperfov.com/'
+          });
+        });
+      };
+    </script>
+  </body>
 </html>

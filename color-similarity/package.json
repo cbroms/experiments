@@ -29,8 +29,10 @@
     "@sveltejs/adapter-static": "^1.0.0-next.31",
     "cookie": "^0.4.1",
     "culori": "^2.0.3",
+    "highlight.js": "^11.5.1",
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
+    "svelte-prism": "^1.1.5",
     "three": "^0.140.2"
   }
 }
