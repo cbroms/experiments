@@ -1,10 +1,8 @@
 <script>
-  import ProjectionControl from '$lib/components/ProjectionControl.svelte';
   import InteractiveLayout from '$lib/components/interactives/InteractiveLayout.svelte';
 
-  import { make2DOKLCHMap, makeLCHColor, generatePalette } from '$lib/colors.js';
-  import { setupCanvas, renderColorMap } from '$lib/canvas';
-  import { map } from '$lib/math';
+  import { makeLCHColor, generatePalette } from '$lib/colors.js';
+
   import { onMount } from 'svelte';
   import { debounce } from 'lodash-es';
 
@@ -38,7 +36,6 @@
       return color.hex;
     });
     paletteHex = `[${hexed.join(', ')}]`;
-    console.log(paletteHex);
   }, 300);
 
   const onChromaChange = (e) => {
@@ -171,6 +168,7 @@
     display: inline-block;
     overflow: scroll;
     padding-bottom: 10px;
+    width: 100%;
   }
 
   .label {
