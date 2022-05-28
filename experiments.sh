@@ -31,7 +31,7 @@ build() {
     cd ${EXPERIMENT_BUILD_DIR} && aws s3 sync . ${S3_BUCKET}${S3_EXPERIMENT_DIR}${builddir} --acl public-read --exclude ".DS_Store" && cd ../..
 
     printf "${experiments}${blue}Syncing index to object storage...${reset}\n"
-    aws s3 sync ${EXPERIMENT_INDEX_DIR} ${S3_BUCKET}${S3_EXPERIMENT_INDEX} --acl public-read 
+    aws s3 sync ${EXPERIMENT_INDEX_DIR} ${S3_BUCKET}${S3_EXPERIMENT_INDEX} --acl public-read --exclude ".DS_Store"
 
     printf "${experiments}${blue}Export complete, exiting...${reset}\n"
     exit 
