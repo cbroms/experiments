@@ -6,11 +6,11 @@ reset="\e[0m"
 
 experiments="${green}@@@ experiments: "
 
-cleanup() {
-   # any cleanup
-}
+# cleanup() {
+#    # any cleanup
+# }
 
-trap cleanup EXIT
+# trap cleanup EXIT
 
 # build the output and sync with object storage
 build() {
@@ -31,7 +31,7 @@ build() {
     cd ${EXPERIMENT_BUILD_DIR} && aws s3 sync . ${S3_BUCKET}${S3_EXPERIMENT_DIR}${builddir} --acl public-read --exclude ".DS_Store" && cd ../..
 
     printf "${experiments}${blue}Syncing index to object storage...${reset}\n"
-    aws s3 cp index.html ${S3_BUCKET}${S3_EXPERIMENT_INDEX}index.html --acl public-read
+    aws s3 sync ${EXPERIMENT_INDEX_DIR} ${S3_BUCKET}${S3_EXPERIMENT_INDEX} --acl public-read 
 
     printf "${experiments}${blue}Export complete, exiting...${reset}\n"
     exit 
